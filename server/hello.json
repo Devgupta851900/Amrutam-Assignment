@@ -1,0 +1,282 @@
+{
+	"title": "3 Week Comprehensive Hair Care Routine",
+	"description": "Holistic approach to hair health and maintenance",
+	"duration": 3,
+	"data": {
+		"weeks": [
+			{
+				"weekNumber": 1,
+				"weekTitle": "Scalp Health and Cleansing",
+				"weekDescription": "Focus on deep cleansing and scalp nutrition",
+				"days": [
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 2,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					},
+					{
+						"dayNumber": 3,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 4,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					},
+					{
+						"dayNumber": 5,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 6,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					},
+					{
+						"dayNumber": 7,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					}
+				]
+			},
+			{
+				"weekNumber": 2,
+				"weekTitle": "Repair and Strengthen",
+				"weekDescription": "Focus on repairing damage and strengthening hair strands",
+				"days": [
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 2,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					},
+					{
+						"dayNumber": 3,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 4,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					},
+					{
+						"dayNumber": 5,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 6,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					},
+					{
+						"dayNumber": 7,
+						"dayTitle": "Hydration Boost",
+						"task": {
+							"taskName": "Deep Conditioning Mask",
+							"taskDescription": "Intense moisture treatment for dry hair",
+							"taskDuration": 45,
+							"productName": "Hydrating Hair Mask",
+							"productImage": "hydration-mask.jpg",
+							"productLink": "https://example.com/hydration-mask"
+						}
+					}
+				]
+			},
+			{
+				"weekNumber": 3,
+				"weekTitle": "Shine and Maintenance",
+				"weekDescription": "Enhance hair shine and establish maintenance routine",
+				"days": [
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					},
+					{
+						"dayNumber": 1,
+						"dayTitle": "Scalp Detox",
+						"task": {
+							"taskName": "Scalp Massage",
+							"taskDescription": "Stimulate blood circulation and promote hair growth",
+							"taskDuration": 15,
+							"productName": "Scalp Massage Oil",
+							"productImage": "scalp-massage-oil.jpg",
+							"productLink": "https://example.com/scalp-oil"
+						}
+					}
+				]
+			}
+		]
+	}
+}
