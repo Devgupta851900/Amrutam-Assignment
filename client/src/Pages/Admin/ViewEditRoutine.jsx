@@ -1,204 +1,387 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
-import React, { useContext, useEffect, useState } from "react";
-import { getRoutine } from "../../utils/api";
-import { addWeekToRoutine, deleteWeekFromRoutine, updateWeek, updateDay } from "../../utils/api";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Clock, User, ChevronDown, ChevronUp, Edit, Trash } from "lucide-react";
-import toast from "react-hot-toast";
-import { AppContext } from "../../utils/contextAPI";
-// import { uploadImageToCloudinary } from "../../utils/cloudinary";
+import React, { useState, useEffect } from "react";
+import { Pencil, Plus, Trash2, Save, X } from "lucide-react";
+import {
+	updateRoutine,
+	addWeekToRoutine,
+	deleteWeekFromRoutine,
+	updateWeek,
+	updateDay,
+	getRoutine,
+} from "../../utils/api"; // Assuming these are exported from your API file
+import { useLocation } from "react-router-dom";
 
 const ViewEditRoutine = () => {
-  const [routine, setRoutine] = useState(null);
-  const [error, setError] = useState(null);
-  const [openWeeks, setOpenWeeks] = useState({});
-  const [openDays, setOpenDays] = useState({});
-  const [editing, setEditing] = useState({}); // Tracks editing state for sections
-  const [formData, setFormData] = useState({}); // Stores form data for edits
-  const { loading, setLoading } = useContext(AppContext);
+	const [routine, setRoutine] = useState(null);
+	const [editingStates, setEditingStates] = useState({
+		header: false,
+		weeks: {},
+		days: {},
+	});
 
-  const location = useLocation();
-  const routineId = location.pathname.split("/").at(-1);
+	// Header editing
+	const [editedHeader, setEditedHeader] = useState({
+		title: "",
+		description: "",
+	});
 
-  const navigate = useNavigate();
+	const location = useLocation();
 
-  const fetchRoutine = async () => {
-    try {
-      setLoading(true);
-      const response = await getRoutine(routineId);
-      setRoutine(response.data.routine);
-      setError(null);
-    } catch (error) {
-      console.error(error);
-      setError("Failed to load routine. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+	const routineId = location.pathname.split("/").at(-1);
 
-  useEffect(() => {
-    fetchRoutine();
-  }, [location.pathname]);
+	useEffect(() => {
+		// Fetch the routine data when the component mounts
+		const fetchRoutine = async () => {
+			const response = await getRoutine(routineId);
+			setRoutine(response.data.routine);
+			setEditedHeader({
+				title: response.data.title,
+				description: response.data.description,
+			});
+		};
+		fetchRoutine();
+	}, [routineId]);
 
-  const toggleWeek = (index) => {
-    setOpenWeeks((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
+	const handleHeaderEdit = () => {
+		setEditingStates((prev) => ({ ...prev, header: true }));
+		setEditedHeader({
+			title: routine.title,
+			description: routine.description,
+		});
+	};
 
-  const toggleDay = (weekIndex, dayIndex) => {
-    setOpenDays((prev) => ({
-      ...prev,
-      [`${weekIndex}-${dayIndex}`]: !prev[`${weekIndex}-${dayIndex}`],
-    }));
-  };
+	const saveHeaderEdit = async () => {
+		await updateRoutine(routineId, {
+			title: editedHeader.title,
+			description: editedHeader.description,
+		});
+		setRoutine((prev) => ({
+			...prev,
+			title: editedHeader.title,
+			description: editedHeader.description,
+		}));
+		setEditingStates((prev) => ({ ...prev, header: false }));
+	};
 
-  const handleEditToggle = (key) => {
-    setEditing((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+	// Week operations
+	const addWeek = async () => {
+		const newWeek = {
+			weekTitle: "New Week",
+			weekDescription: "New week description",
+			days: Array(7)
+				.fill()
+				.map((_, idx) => ({
+					dayNumber: idx + 1,
+					dayTitle: "New Day",
+					task: {
+						taskName: "New Task",
+						taskDescription: "New task description",
+						taskDuration: 30,
+						productName: "New Product",
+						productImage: "default.jpg",
+						productLink: "https://example.com",
+					},
+				})),
+		};
 
-  const handleFormChange = (key, value) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-  };
+		const response = await addWeekToRoutine(routineId, newWeek);
+		setRoutine((prev) => ({
+			...prev,
+			data: {
+				...prev.data,
+				weeks: [...prev.data.weeks, response.data],
+			},
+		}));
+	};
 
-  const handleImageUpload = async (file) => {
-    try {
-    //   const response = await uploadImageToCloudinary(file);
-    const response = "Hello"
-      return response.secure_url;
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      toast.error("Image upload failed. Please try again.");
-      return null;
-    }
-  };
+	const deleteWeek = async (weekIndex) => {
+		const weekId = routine.data.weeks[weekIndex]._id;
+		await deleteWeekFromRoutine(routineId, weekId);
+		setRoutine((prev) => ({
+			...prev,
+			data: {
+				...prev.data,
+				weeks: prev.data.weeks.filter((_, idx) => idx !== weekIndex),
+			},
+		}));
+	};
 
-  const handleUpdateWeek = async (weekId, data) => {
-    try {
-      setLoading(true);
-      await updateWeek(routineId, weekId, data);
-      toast.success("Week updated successfully!");
-      await fetchRoutine();
-      setEditing({});
-    } catch (error) {
-      console.error("Failed to update week:", error);
-      toast.error("Failed to update week. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+	const handleWeekEdit = (weekIndex) => {
+		setEditingStates((prev) => ({
+			...prev,
+			weeks: { ...prev.weeks, [weekIndex]: true },
+		}));
+	};
 
-  const handleUpdateDay = async (weekId, dayId, data) => {
-    try {
-      setLoading(true);
-      await updateDay(routineId, weekId, dayId, data);
-      toast.success("Day updated successfully!");
-      await fetchRoutine();
-      setEditing({});
-    } catch (error) {
-      console.error("Failed to update day:", error);
-      toast.error("Failed to update day. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+	const saveWeekEdit = async (weekIndex, newTitle, newDescription) => {
+		const weekId = routine.data.weeks[weekIndex]._id;
+		await updateWeek(routineId, weekId, {
+			weekTitle: newTitle,
+			weekDescription: newDescription,
+		});
 
-  const handleAddWeek = async (newWeekData) => {
-    try {
-      setLoading(true);
-      await addWeekToRoutine(routineId, newWeekData);
-      toast.success("Week added successfully!");
-      await fetchRoutine();
-    } catch (error) {
-      console.error("Failed to add week:", error);
-      toast.error("Failed to add week. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+		setRoutine((prev) => ({
+			...prev,
+			data: {
+				...prev.data,
+				weeks: prev.data.weeks.map((week, idx) =>
+					idx === weekIndex
+						? {
+								...week,
+								weekTitle: newTitle,
+								weekDescription: newDescription,
+						  }
+						: week
+				),
+			},
+		}));
+		setEditingStates((prev) => ({
+			...prev,
+			weeks: { ...prev.weeks, [weekIndex]: false },
+		}));
+	};
 
-  const handleDeleteWeek = async (weekId) => {
-    try {
-      setLoading(true);
-      await deleteWeekFromRoutine(routineId, weekId);
-      toast.success("Week deleted successfully!");
-      await fetchRoutine();
-    } catch (error) {
-      console.error("Failed to delete week:", error);
-      toast.error("Failed to delete week. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+	const handleDayEdit = (weekIndex, dayIndex) => {
+		setEditingStates((prev) => ({
+			...prev,
+			days: { ...prev.days, [`${weekIndex}-${dayIndex}`]: true },
+		}));
+	};
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-pulse text-2xl text-gray-500">
-          Loading your routine...
-        </div>
-      </div>
-    );
-  }
+	const saveDayEdit = async (weekIndex, dayIndex, updatedDay) => {
+		const weekId = routine.data.weeks[weekIndex]._id;
+		const dayId = routine.data.weeks[weekIndex].days[dayIndex]._id;
 
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 text-red-800 p-6 rounded-lg max-w-md mx-auto mt-10 text-center">
-        {error}
-      </div>
-    );
-  }
+		await updateDay(routineId, weekId, dayId, updatedDay);
 
-  return (
-    <div className="container mx-auto pt-24 px-4 py-8 max-w-7xl">
-      <button
-        onClick={() => navigate(-1)}
-        className="mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
-      >
-        Back
-      </button>
+		setRoutine((prev) => ({
+			...prev,
+			data: {
+				...prev.data,
+				weeks: prev.data.weeks.map((week, wIdx) =>
+					wIdx === weekIndex
+						? {
+								...week,
+								days: week.days.map((day, dIdx) =>
+									dIdx === dayIndex ? updatedDay : day
+								),
+						  }
+						: week
+				),
+			},
+		}));
 
-      {routine && (
-        <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-          <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 text-white flex justify-between items-center">
-            <div className="p-8">
-              <h1 className="text-4xl font-extrabold mb-2">
-                {editing.title ? (
-                  <input
-                    value={formData.title || routine.title}
-                    onChange={(e) =>
-                      handleFormChange("title", e.target.value)
-                    }
-                    className="bg-gray-200 rounded p-2 w-full"
-                  />
-                ) : (
-                  routine.title
-                )}
-              </h1>
-              <button
-                onClick={() =>
-                  editing.title
-                    ? handleUpdateWeek(routine._id, { title: formData.title })
-                    : handleEditToggle("title")
-                }
-                className="text-blue-500 underline"
-              >
-                {editing.title ? "Save" : "Edit"}
-              </button>
-            </div>
-          </div>
-          {/* Render Weeks and Days with Edit Options */}
-          {routine?.data?.weeks?.map((week, index) => (
-            <div key={index}>
-              {/* Week Section */}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+		setEditingStates((prev) => ({
+			...prev,
+			days: { ...prev.days, [`${weekIndex}-${dayIndex}`]: false },
+		}));
+	};
+
+	if (!routine) {
+		return <div>Loading...</div>;
+	}
+
+	return (
+		<div className="max-w-6xl mx-auto p-6 space-y-8">
+			{/* Header Section */}
+			<div className="bg-white rounded-lg shadow-md p-6">
+				{!editingStates.header ? (
+					<div className="flex justify-between items-start">
+						<div>
+							<h1 className="text-3xl font-bold text-gray-900">
+								{routine.title}
+							</h1>
+							<p className="mt-2 text-gray-600">
+								{routine.description}
+							</p>
+						</div>
+						<button
+							onClick={handleHeaderEdit}
+							className="p-2 text-gray-600 hover:text-blue-600"
+						>
+							<Pencil className="w-5 h-5" />
+						</button>
+					</div>
+				) : (
+					<div className="space-y-4">
+						<input
+							type="text"
+							value={editedHeader.title}
+							onChange={(e) =>
+								setEditedHeader((prev) => ({
+									...prev,
+									title: e.target.value,
+								}))
+							}
+							className="w-full p-2 border rounded"
+						/>
+						<textarea
+							value={editedHeader.description}
+							onChange={(e) =>
+								setEditedHeader((prev) => ({
+									...prev,
+									description: e.target.value,
+								}))
+							}
+							className="w-full p-2 border rounded"
+						/>
+						<div className="flex gap-2">
+							<button
+								onClick={saveHeaderEdit}
+								className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+							>
+								<Save className="w-4 h-4" />
+							</button>
+							<button
+								onClick={() =>
+									setEditingStates((prev) => ({
+										...prev,
+										header: false,
+									}))
+								}
+								className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+							>
+								<X className="w-4 h-4" />
+							</button>
+						</div>
+					</div>
+				)}
+			</div>
+
+			{/* Weeks Section */}
+			<div className="space-y-6">
+				{routine.data.weeks.map((week, weekIndex) => (
+					<div
+						key={weekIndex}
+						className="bg-white rounded-lg shadow-md p-6"
+					>
+						{/* Week Header */}
+						<div className="border-b pb-4 mb-4">
+							<div className="flex justify-between items-start">
+								<div>
+									<h2 className="text-xl font-semibold text-gray-900">
+										Week {weekIndex + 1}: {week.weekTitle}
+									</h2>
+									<p className="mt-1 text-gray-600">
+										{week.weekDescription}
+									</p>
+								</div>
+								<div className="flex gap-2">
+									<button
+										onClick={() =>
+											handleWeekEdit(weekIndex)
+										}
+										className="p-2 text-gray-600 hover:text-blue-600"
+									>
+										<Pencil className="w-5 h-5" />
+									</button>
+									<button
+										onClick={() => deleteWeek(weekIndex)}
+										className="p-2 text-gray-600 hover:text-red-600"
+									>
+										<Trash2 className="w-5 h-5" />
+									</button>
+								</div>
+							</div>
+						</div>
+
+						{/* Days List */}
+						<div className="space-y-4">
+							{week.days.map((day, dayIndex) => (
+								<div
+									key={dayIndex}
+									className="border rounded-lg p-4"
+								>
+									{editingStates.days[
+										`${weekIndex}-${dayIndex}`
+									] ? (
+										<div className="space-y-4">
+											<div>
+												<label className="block text-sm font-medium text-gray-700">
+													Day Title
+												</label>
+												<input
+													type="text"
+													value={day.dayTitle}
+													onChange={(e) => {
+														const updatedDay = {
+															...day,
+															dayTitle:
+																e.target.value,
+														};
+														saveDayEdit(
+															weekIndex,
+															dayIndex,
+															updatedDay
+														);
+													}}
+													className="mt-1 w-full p-2 border rounded"
+												/>
+											</div>
+											<div>
+												<label className="block text-sm font-medium text-gray-700">
+													Task
+												</label>
+												<input
+													type="text"
+													value={day.task.taskName}
+													onChange={(e) => {
+														const updatedDay = {
+															...day,
+															task: {
+																...day.task,
+																taskName:
+																	e.target
+																		.value,
+															},
+														};
+														saveDayEdit(
+															weekIndex,
+															dayIndex,
+															updatedDay
+														);
+													}}
+													className="mt-1 w-full p-2 border rounded"
+												/>
+											</div>
+										</div>
+									) : (
+										<div className="flex justify-between">
+											<div>
+												<p className="font-semibold">
+													{day.dayTitle}
+												</p>
+												<p>{day.task.taskName}</p>
+											</div>
+											<button
+												onClick={() =>
+													handleDayEdit(
+														weekIndex,
+														dayIndex
+													)
+												}
+												className="p-2 text-gray-600 hover:text-blue-600"
+											>
+												<Pencil className="w-5 h-5" />
+											</button>
+										</div>
+									)}
+								</div>
+							))}
+						</div>
+					</div>
+				))}
+			</div>
+
+			{/* Add New Week Button */}
+			<button
+				onClick={addWeek}
+				className="mt-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+			>
+				<Plus className="w-5 h-5" />
+				Add New Week
+			</button>
+		</div>
+	);
 };
 
 export default ViewEditRoutine;
