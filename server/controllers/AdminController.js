@@ -22,6 +22,7 @@ export const createRoutine = async (req, res) => {
 			title,
 			description,
 			duration,
+			image,
 			data = {},
 			users = [],
 		} = req.body;
@@ -76,6 +77,7 @@ export const createRoutine = async (req, res) => {
 			title,
 			description,
 			duration,
+			image,
 			data,
 			users, // Only consumer users can be added
 			creator, // Admin user who creates the routine

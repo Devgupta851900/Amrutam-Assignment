@@ -57,7 +57,7 @@ router.get(
 );
 
 router.get(
-	"/routine/getAdminRoutineProgressSummary/:routineId",
+	"/routine/getAdminRoutineProgressSummary",
 	auth,
 	isAdmin,
 	getAdminRoutinesProgressSummary

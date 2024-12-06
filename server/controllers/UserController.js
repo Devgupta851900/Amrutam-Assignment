@@ -1,7 +1,6 @@
 import Routine from "../models/Routine.js";
 import User from "../models/User.js";
 import RoutineProgress from "../models/RoutineProgress.js";
-import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 
 // Allow user to join a routine
 export const joinRoutine = async (req, res) => {
@@ -71,7 +70,7 @@ export const joinRoutine = async (req, res) => {
 		);
 
 		// Add routine progress to user's routineProgress array
-		await User.findByIdAndUpdate(
+		const updatedUser = await User.findByIdAndUpdate(
 			userId,
 			{ $push: { routineProgress: routineProgress._id } },
 			{ new: true }
@@ -87,8 +86,7 @@ export const joinRoutine = async (req, res) => {
 		// Respond with success message and routine progress
 		res.status(200).json({
 			message: "User successfully joined the routine.",
-			routine: updatedRoutine,
-			routineProgress: routineProgress,
+			user: updatedUser,
 		});
 	} catch (error) {
 		console.error("Error joining routine:", error);
@@ -290,8 +288,8 @@ export const getAllRoutineProgress = async (req, res) => {
 				if (!routineProgress) {
 					return {
 						routineId: routine._id,
-						routineTitle: routine.title,
-						routineDescription: routine.description,
+						title: routine.title,
+						description: routine.description,
 						overallProgress: {
 							totalDays: 0,
 							completedDays: 0,
@@ -324,7 +322,8 @@ export const getAllRoutineProgress = async (req, res) => {
 
 				return {
 					routineId: routine._id,
-					routineTitle: routine.title,
+					title: routine.title,
+					description: routine.description,
 					overallProgress: {
 						totalDays,
 						completedDays,
@@ -344,35 +343,6 @@ export const getAllRoutineProgress = async (req, res) => {
 		res.status(500).json({
 			message:
 				"An error occurred while fetching the routine progress for all routines.",
-		});
-	}
-};
-
-export const updateDisplayPicture = async (req, res) => {
-	try {
-		const displayPicture = req.files.displayPicture;
-		const userId = req.user.id;
-		const image = await uploadImageToCloudinary(
-			displayPicture,
-			process.env.FOLDER_NAME,
-			1000,
-			1000
-		);
-
-		const updatedProfile = await User.findByIdAndUpdate(
-			{ _id: userId },
-			{ image: image.secure_url },
-			{ new: true }
-		);
-		res.send({
-			success: true,
-			message: `Image Updated successfully`,
-			data: updatedProfile,
-		});
-	} catch (error) {
-		return res.status(500).json({
-			success: false,
-			message: error.message,
 		});
 	}
 };
