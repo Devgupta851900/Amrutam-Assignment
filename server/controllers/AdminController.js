@@ -529,7 +529,6 @@ export const getRoutineUsersProgress = async (req, res) => {
 				userName: progress.user.name,
 				userEmail: progress.user.email,
 				overallProgressPercentage: overallProgressPercentage.toFixed(2),
-				progressData: progress.progressData,
 				weeklyProgress,
 			};
 		});
@@ -537,6 +536,8 @@ export const getRoutineUsersProgress = async (req, res) => {
 		res.status(200).json({
 			routineId: routine._id,
 			routineTitle: routine.title,
+			routineDescription: routine.description,
+			routineImage: routine.image,
 			routineDuration: routine.duration,
 			usersProgress: progressDetails,
 		});
@@ -563,7 +564,7 @@ export const getAdminRoutinesProgressSummary = async (req, res) => {
 				// Find progress entries for this routine
 				const usersProgress = await RoutineProgress.find({
 					routineId: routine._id,
-				});
+				}).populate("user", "name");
 
 				// Calculate overall routine statistics
 				const userProgressStats = usersProgress.map((progress) => {
@@ -577,6 +578,7 @@ export const getAdminRoutinesProgressSummary = async (req, res) => {
 				return {
 					routineId: routine._id,
 					routineTitle: routine.title,
+					routineImage: routine.image,
 					totalUsers: usersProgress.length,
 					averageProgressPercentage:
 						userProgressStats.length > 0
@@ -587,15 +589,6 @@ export const getAdminRoutinesProgressSummary = async (req, res) => {
 									) / userProgressStats.length
 							  ).toFixed(2)
 							: "0.00",
-					userProgressDetails: usersProgress.map((progress) => ({
-						userId: progress.user,
-						progressPercentage: (
-							(progress.progressData.flat().filter(Boolean)
-								.length /
-								(routine.duration * 7)) *
-							100
-						).toFixed(2),
-					})),
 				};
 			})
 		);

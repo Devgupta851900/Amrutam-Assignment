@@ -9,11 +9,7 @@ import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import { auth } from "./middleware/auth.js";
 import { login, signup, getUserDetails } from "./controllers/AuthController.js";
-import {
-	getRoutine,
-	getAllRoutines,
-	updateDisplayPicture,
-} from "./controllers/publicController.js";
+import { getRoutine, getAllRoutines } from "./controllers/publicController.js";
 
 const app = express();
 
@@ -56,7 +52,6 @@ app.get("/api/v1/auth/getUserDetails", auth, getUserDetails);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.get("/api/v1/getRoutine/:routineId", getRoutine);
-app.put("/api/v1/updateDisplayPicture", auth, updateDisplayPicture);
 app.get("/api/v1/getAllRoutines", getAllRoutines);
 
 app.listen(PORT, () => {

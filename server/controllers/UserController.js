@@ -324,6 +324,7 @@ export const getAllRoutineProgress = async (req, res) => {
 					routineId: routine._id,
 					title: routine.title,
 					description: routine.description,
+					image: routine.image,
 					overallProgress: {
 						totalDays,
 						completedDays,
