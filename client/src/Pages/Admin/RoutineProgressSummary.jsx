@@ -11,6 +11,12 @@ const RoutineProgressSummary = () => {
 	// Extract routineId from location.pathname
 	const routineId = location.pathname.split("/").pop();
 
+	const [isWeeklyProgressOpen, setIsWeeklyProgressOpen] = useState(false);
+
+	// Toggle Weekly Progress dropdown
+	const toggleWeeklyProgress = () => {
+		setIsWeeklyProgressOpen(!isWeeklyProgressOpen);
+	};
 	useEffect(() => {
 		const fetchRoutineProgress = async () => {
 			try {
@@ -94,29 +100,51 @@ const RoutineProgressSummary = () => {
 								></div>
 							</div>
 						</div>
+
+						{/* Weekly Progress Dropdown */}
 						<div className="mt-6">
-							<h4 className="text-lg font-semibold text-gray-700 mb-2">
-								Weekly Progress:
+							<h4
+								className="text-lg font-semibold text-gray-700 mb-2 cursor-pointer"
+								onClick={toggleWeeklyProgress}
+							>
+								Weekly Progress
+								<span
+									className={`ml-2 transform transition-transform duration-300 ${
+										isWeeklyProgressOpen ? "rotate-180" : ""
+									}`}
+								>
+									▼
+								</span>
 							</h4>
-							{user.weeklyProgress.map((week) => (
-								<div key={week.weekNumber} className="mb-4">
-									<p className="text-sm text-gray-500 mb-1">
-										Week {week.weekNumber}:{" "}
-										<span className="text-gray-800">
-											{week.completedDays}/
-											{week.totalDays} days completed
-										</span>
-									</p>
-									<div className="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden mb-2">
-										<div
-											className="absolute top-0 left-0 h-full bg-blue-500"
-											style={{
-												width: `${week.weekProgressPercentage}%`,
-											}}
-										></div>
+
+							{/* Dropdown content with animation */}
+							<div
+								className={`transition-max-height duration-500 overflow-hidden ${
+									isWeeklyProgressOpen
+										? "max-h-96"
+										: "max-h-0"
+								}`}
+							>
+								{user.weeklyProgress.map((week) => (
+									<div key={week.weekNumber} className="mb-4">
+										<p className="text-sm text-gray-500 mb-1">
+											Week {week.weekNumber}:{" "}
+											<span className="text-gray-800">
+												{week.completedDays}/
+												{week.totalDays} days completed
+											</span>
+										</p>
+										<div className="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden mb-2">
+											<div
+												className="absolute top-0 left-0 h-full bg-blue-500"
+												style={{
+													width: `${week.weekProgressPercentage}%`,
+												}}
+											></div>
+										</div>
 									</div>
-								</div>
-							))}
+								))}
+							</div>
 						</div>
 					</div>
 				))}

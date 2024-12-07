@@ -26,7 +26,6 @@ const AdminDashboard = () => {
 
 	return (
 		<div className="min-h-screen pt-24 bg-[#F5F5DC] p-8">
-			{" "}
 			{/* Beige background */}
 			<div className="max-w-7xl mx-auto">
 				{/* Header */}

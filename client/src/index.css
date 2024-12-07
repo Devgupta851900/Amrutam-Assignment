@@ -4,6 +4,10 @@
 
 /* Loader  */
 
+body {
+	font-family: "Fredoka", serif;
+}
+
 .loader {
 	display: block;
 	--height-of-loader: 4px;
