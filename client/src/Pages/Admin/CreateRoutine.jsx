@@ -3,20 +3,24 @@ import { produce } from "immer";
 import ImageUploader from "../../components/ImageUploader";
 import { createRoutine } from "../../utils/api";
 import { AppContext } from "../../utils/contextAPI";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const CreateRoutinePage = () => {
 	const { fetchAdminData } = useContext(AppContext);
+
+	const navigate = useNavigate();
 
 	const [routine, setRoutine] = useState({
 		title: "",
 		description: "",
 		duration: 0,
 		image: null,
-		imageUrl: null,
 		weeks: [],
 	});
 
 	const handleCreateRoutine = async () => {
+		const toastId = toast.loading("Creating Routine");
 		try {
 			// Validate duration and ensure it matches weeks length
 			if (typeof routine.duration !== "number") {
@@ -74,9 +78,16 @@ const CreateRoutinePage = () => {
 
 			// Handle successful response
 			console.log("Routine created successfully", response);
+
+			toast.success("Routine Created Successfully");
+
+			navigate("/admin");
 		} catch (error) {
 			// Error handling
+			toast.error(error.message);
 			console.error("Error creating routine:", error.message);
+		} finally {
+			toast.dismiss(toastId);
 		}
 	};
 
@@ -114,6 +125,17 @@ const CreateRoutinePage = () => {
 						},
 					})),
 				});
+				draft.duration = draft.weeks.length;
+			})
+		);
+	};
+
+	const removeWeek = (index) => {
+		setRoutine((prev) =>
+			produce(prev, (draft) => {
+				// Remove the week at the specified index
+				draft.weeks.splice(index, 1);
+				// Update the duration based on the new number of weeks
 				draft.duration = draft.weeks.length;
 			})
 		);
@@ -182,7 +204,7 @@ const CreateRoutinePage = () => {
 							</label>
 							<ImageUploader
 								label="Routine Image"
-								path="imageUrl"
+								path="image"
 								onUploadSuccess={(path, secureUrl) =>
 									handleFieldChange(path, secureUrl)
 								}
@@ -205,8 +227,14 @@ const CreateRoutinePage = () => {
 								{/* Week Title Section - Styled like day section */}
 								<div className="flex items-center space-x-4">
 									<div className="flex-grow space-y-2">
-										<label className="block text-xl font-bold text-gray-700 mb-2">
+										<label className="text-xl font-bold text-gray-700 mb-2 flex justify-between">
 											Week Title
+											<button
+												className=""
+												onClick={removeWeek}
+											>
+												Remove week
+											</button>
 										</label>
 										<input
 											type="text"
@@ -253,7 +281,7 @@ const CreateRoutinePage = () => {
 									</label>
 									<ImageUploader
 										label="Week Image"
-										path={`weeks.${weekIndex}.weekImageUrl`}
+										path={`weeks.${weekIndex}.weekImage`}
 										onUploadSuccess={(path, secureUrl) =>
 											handleFieldChange(path, secureUrl)
 										}

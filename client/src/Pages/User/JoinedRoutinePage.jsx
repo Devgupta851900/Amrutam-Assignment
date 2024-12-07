@@ -280,6 +280,9 @@ const JoinedRoutinePage = () => {
 								<h1 className="text-4xl font-extrabold mb-2">
 									{routine.title}
 								</h1>
+								<div className="text-xl font-semibold">
+									{routine.description}
+								</div>
 								<div className="flex items-center space-x-4 mt-3">
 									<div className="flex items-center space-x-2">
 										<User className="h-5 w-5" />

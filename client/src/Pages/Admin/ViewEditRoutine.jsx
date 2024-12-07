@@ -1,385 +1,392 @@
-import React, { useState, useEffect } from "react";
-import { Pencil, Plus, Trash2, Save, X } from "lucide-react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
+import { ChevronDown, ChevronUp, User, Clock } from "lucide-react";
+import UnifiedModal from "../../components/UnifiedRoutineModal"; // Reusable Modal for Add/Edit actions
+import { useLocation, useNavigate } from "react-router-dom";
 import {
-	updateRoutine,
+	getRoutine,
 	addWeekToRoutine,
 	deleteWeekFromRoutine,
-	updateWeek,
-	updateDay,
-	getRoutine,
-} from "../../utils/api"; // Assuming these are exported from your API file
-import { useLocation } from "react-router-dom";
+} from "../../utils/api";
+import { produce } from "immer";
 
 const ViewEditRoutine = () => {
-	const [routine, setRoutine] = useState(null);
-	const [editingStates, setEditingStates] = useState({
-		header: false,
-		weeks: {},
-		days: {},
-	});
-
-	// Header editing
-	const [editedHeader, setEditedHeader] = useState({
-		title: "",
-		description: "",
-	});
+	const navigate = useNavigate();
+	const [routine, setRoutine] = useState();
+	const [openWeeks, setOpenWeeks] = useState({});
+	const [openDays, setOpenDays] = useState({});
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [modalMode, setModalMode] = useState("");
+	const [modalData, setModalData] = useState(null);
 
 	const location = useLocation();
-
 	const routineId = location.pathname.split("/").at(-1);
 
-	useEffect(() => {
-		// Fetch the routine data when the component mounts
-		const fetchRoutine = async () => {
+	const fetchRoutine = async () => {
+		try {
 			const response = await getRoutine(routineId);
 			setRoutine(response.data.routine);
-			setEditedHeader({
-				title: response.data.title,
-				description: response.data.description,
-			});
-		};
+		} catch (error) {
+			console.error(error);
+		} finally {
+		}
+	};
+
+	useEffect(() => {
 		fetchRoutine();
-	}, [routineId]);
+	}, []);
 
-	const handleHeaderEdit = () => {
-		setEditingStates((prev) => ({ ...prev, header: true }));
-		setEditedHeader({
-			title: routine.title,
-			description: routine.description,
-		});
-	};
-
-	const saveHeaderEdit = async () => {
-		await updateRoutine(routineId, {
-			title: editedHeader.title,
-			description: editedHeader.description,
-		});
-		setRoutine((prev) => ({
+	// Toggle week collapse
+	const toggleWeek = (weekIndex) => {
+		setOpenWeeks((prev) => ({
 			...prev,
-			title: editedHeader.title,
-			description: editedHeader.description,
+			[weekIndex]: !prev[weekIndex],
 		}));
-		setEditingStates((prev) => ({ ...prev, header: false }));
 	};
 
-	// Week operations
+	// Toggle day collapse
+	const toggleDay = (weekIndex, dayIndex) => {
+		const key = `${weekIndex}-${dayIndex}`;
+		setOpenDays((prev) => ({
+			...prev,
+			[key]: !prev[key],
+		}));
+	};
+
+	// Open modal for editing or adding
+	const handleOpenModal = (mode, data = null) => {
+		setModalMode(mode);
+		setModalData(data);
+		setIsModalOpen(true);
+	};
+
 	const addWeek = async () => {
-		const newWeek = {
-			weekTitle: "New Week",
-			weekDescription: "New week description",
-			days: Array(7)
-				.fill()
-				.map((_, idx) => ({
-					dayNumber: idx + 1,
-					dayTitle: "New Day",
-					task: {
-						taskName: "New Task",
-						taskDescription: "New task description",
-						taskDuration: 30,
-						productName: "New Product",
-						productImage: "default.jpg",
-						productLink: "https://example.com",
-					},
-				})),
+		const data = {
+			weekTitle: "",
+			weekDescription: "",
+			weekImage: null,
+			weekImageUrl: null,
+			days: Array.from({ length: 7 }, (_, index) => ({
+				dayTitle: `Day ${index + 1} Title`,
+				dayDescription: `Day ${index + 1} Description`,
+				task: {
+					taskName: "",
+					taskDescription: "",
+					taskDuration: "",
+					productName: "",
+					productImage: "",
+					productLink: "",
+				},
+			})),
 		};
 
-		const response = await addWeekToRoutine(routineId, newWeek);
-		setRoutine((prev) => ({
-			...prev,
-			data: {
-				...prev.data,
-				weeks: [...prev.data.weeks, response.data],
-			},
-		}));
+		await addWeekToRoutine(routineId, data);
+
+		await fetchRoutine();
 	};
 
-	const deleteWeek = async (weekIndex) => {
-		const weekId = routine.data.weeks[weekIndex]._id;
-		await deleteWeekFromRoutine(routineId, weekId);
-		setRoutine((prev) => ({
-			...prev,
-			data: {
-				...prev.data,
-				weeks: prev.data.weeks.filter((_, idx) => idx !== weekIndex),
-			},
-		}));
+	const handleDelete = async (routineId, weekNumber) => {
+		await deleteWeekFromRoutine(routineId, weekNumber);
+		await fetchRoutine();
 	};
-
-	const handleWeekEdit = (weekIndex) => {
-		setEditingStates((prev) => ({
-			...prev,
-			weeks: { ...prev.weeks, [weekIndex]: true },
-		}));
-	};
-
-	const saveWeekEdit = async (weekIndex, newTitle, newDescription) => {
-		const weekId = routine.data.weeks[weekIndex]._id;
-		await updateWeek(routineId, weekId, {
-			weekTitle: newTitle,
-			weekDescription: newDescription,
-		});
-
-		setRoutine((prev) => ({
-			...prev,
-			data: {
-				...prev.data,
-				weeks: prev.data.weeks.map((week, idx) =>
-					idx === weekIndex
-						? {
-								...week,
-								weekTitle: newTitle,
-								weekDescription: newDescription,
-						  }
-						: week
-				),
-			},
-		}));
-		setEditingStates((prev) => ({
-			...prev,
-			weeks: { ...prev.weeks, [weekIndex]: false },
-		}));
-	};
-
-	const handleDayEdit = (weekIndex, dayIndex) => {
-		setEditingStates((prev) => ({
-			...prev,
-			days: { ...prev.days, [`${weekIndex}-${dayIndex}`]: true },
-		}));
-	};
-
-	const saveDayEdit = async (weekIndex, dayIndex, updatedDay) => {
-		const weekId = routine.data.weeks[weekIndex]._id;
-		const dayId = routine.data.weeks[weekIndex].days[dayIndex]._id;
-
-		await updateDay(routineId, weekId, dayId, updatedDay);
-
-		setRoutine((prev) => ({
-			...prev,
-			data: {
-				...prev.data,
-				weeks: prev.data.weeks.map((week, wIdx) =>
-					wIdx === weekIndex
-						? {
-								...week,
-								days: week.days.map((day, dIdx) =>
-									dIdx === dayIndex ? updatedDay : day
-								),
-						  }
-						: week
-				),
-			},
-		}));
-
-		setEditingStates((prev) => ({
-			...prev,
-			days: { ...prev.days, [`${weekIndex}-${dayIndex}`]: false },
-		}));
-	};
-
-	if (!routine) {
-		return <div>Loading...</div>;
-	}
 
 	return (
-		<div className="max-w-6xl mx-auto p-6 space-y-8">
-			{/* Header Section */}
-			<div className="bg-white rounded-lg shadow-md p-6">
-				{!editingStates.header ? (
-					<div className="flex justify-between items-start">
-						<div>
-							<h1 className="text-3xl font-bold text-gray-900">
-								{routine.title}
-							</h1>
-							<p className="mt-2 text-gray-600">
-								{routine.description}
-							</p>
-						</div>
-						<button
-							onClick={handleHeaderEdit}
-							className="p-2 text-gray-600 hover:text-blue-600"
-						>
-							<Pencil className="w-5 h-5" />
-						</button>
-					</div>
-				) : (
-					<div className="space-y-4">
-						<input
-							type="text"
-							value={editedHeader.title}
-							onChange={(e) =>
-								setEditedHeader((prev) => ({
-									...prev,
-									title: e.target.value,
-								}))
-							}
-							className="w-full p-2 border rounded"
-						/>
-						<textarea
-							value={editedHeader.description}
-							onChange={(e) =>
-								setEditedHeader((prev) => ({
-									...prev,
-									description: e.target.value,
-								}))
-							}
-							className="w-full p-2 border rounded"
-						/>
-						<div className="flex gap-2">
-							<button
-								onClick={saveHeaderEdit}
-								className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-							>
-								<Save className="w-4 h-4" />
-							</button>
-							<button
-								onClick={() =>
-									setEditingStates((prev) => ({
-										...prev,
-										header: false,
-									}))
-								}
-								className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-							>
-								<X className="w-4 h-4" />
-							</button>
-						</div>
-					</div>
-				)}
-			</div>
+		<div className="container mx-auto pt-24 px-4 py-8 max-w-7xl">
+			{/* Back Button */}
+			<button
+				onClick={() => navigate(-1)}
+				className="mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
+			>
+				Back
+			</button>
 
-			{/* Weeks Section */}
-			<div className="space-y-6">
-				{routine.data.weeks.map((week, weekIndex) => (
-					<div
-						key={weekIndex}
-						className="bg-white rounded-lg shadow-md p-6"
-					>
-						{/* Week Header */}
-						<div className="border-b pb-4 mb-4">
-							<div className="flex justify-between items-start">
-								<div>
-									<h2 className="text-xl font-semibold text-gray-900">
-										Week {weekIndex + 1}: {week.weekTitle}
-									</h2>
-									<p className="mt-1 text-gray-600">
-										{week.weekDescription}
-									</p>
-								</div>
-								<div className="flex gap-2">
-									<button
-										onClick={() =>
-											handleWeekEdit(weekIndex)
-										}
-										className="p-2 text-gray-600 hover:text-blue-600"
-									>
-										<Pencil className="w-5 h-5" />
-									</button>
-									<button
-										onClick={() => deleteWeek(weekIndex)}
-										className="p-2 text-gray-600 hover:text-red-600"
-									>
-										<Trash2 className="w-5 h-5" />
-									</button>
+			{/* Routine Header */}
+			{routine && (
+				<div className="bg-white shadow-xl rounded-xl overflow-hidden">
+					{/* Header Section */}
+					<div className="relative bg-gradient-to-r from-blue-500 to-purple-600 text-white flex justify-between items-center">
+						<div>
+							<img
+								alt="routineImage"
+								src={routine.image}
+								className="object-contain h-[400px] aspect-auto"
+							/>
+						</div>
+						{/* Overlay */}
+						<div className="absolute inset-0 bg-black opacity-50"></div>
+
+						{/* Content */}
+						<div className="relative flex justify-between items-center w-full p-8">
+							<div>
+								<h1 className="text-4xl font-extrabold mb-2">
+									{routine.title}
+								</h1>
+								<div className="flex items-center space-x-4 mt-3">
+									<div className="flex items-center space-x-2">
+										<User className="h-5 w-5" />
+										<span>{routine.creator.name}</span>
+									</div>
+									<div className="flex items-center space-x-2">
+										<Clock className="h-5 w-5" />
+										<span>{routine.duration}</span>
+									</div>
 								</div>
 							</div>
-						</div>
-
-						{/* Days List */}
-						<div className="space-y-4">
-							{week.days.map((day, dayIndex) => (
-								<div
-									key={dayIndex}
-									className="border rounded-lg p-4"
+							<div className="space-x-4">
+								<button
+									onClick={() =>
+										handleOpenModal("routine", {
+											title: routine.title,
+											description: routine.description,
+											routineId: routineId,
+										})
+									}
+									className="px-6 py-2 bg-blue-600 hover:bg-blue-700 transition text-white font-bold rounded-lg shadow-lg"
 								>
-									{editingStates.days[
-										`${weekIndex}-${dayIndex}`
-									] ? (
-										<div className="space-y-4">
-											<div>
-												<label className="block text-sm font-medium text-gray-700">
-													Day Title
-												</label>
-												<input
-													type="text"
-													value={day.dayTitle}
-													onChange={(e) => {
-														const updatedDay = {
-															...day,
-															dayTitle:
-																e.target.value,
-														};
-														saveDayEdit(
-															weekIndex,
-															dayIndex,
-															updatedDay
-														);
-													}}
-													className="mt-1 w-full p-2 border rounded"
-												/>
-											</div>
-											<div>
-												<label className="block text-sm font-medium text-gray-700">
-													Task
-												</label>
-												<input
-													type="text"
-													value={day.task.taskName}
-													onChange={(e) => {
-														const updatedDay = {
-															...day,
-															task: {
-																...day.task,
-																taskName:
-																	e.target
-																		.value,
-															},
-														};
-														saveDayEdit(
-															weekIndex,
-															dayIndex,
-															updatedDay
-														);
-													}}
-													className="mt-1 w-full p-2 border rounded"
-												/>
-											</div>
-										</div>
-									) : (
-										<div className="flex justify-between">
-											<div>
-												<p className="font-semibold">
-													{day.dayTitle}
-												</p>
-												<p>{day.task.taskName}</p>
-											</div>
-											<button
-												onClick={() =>
-													handleDayEdit(
-														weekIndex,
-														dayIndex
-													)
-												}
-												className="p-2 text-gray-600 hover:text-blue-600"
-											>
-												<Pencil className="w-5 h-5" />
-											</button>
-										</div>
-									)}
-								</div>
-							))}
+									Edit Routine Header
+								</button>
+							</div>
 						</div>
 					</div>
-				))}
-			</div>
 
-			{/* Add New Week Button */}
-			<button
-				onClick={addWeek}
-				className="mt-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-			>
-				<Plus className="w-5 h-5" />
-				Add New Week
-			</button>
+					{/* Weeks Breakdown */}
+					<div className="p-6">
+						{routine?.data?.weeks?.map((week, index) => (
+							<div
+								key={index}
+								className="mb-6 border rounded-lg shadow-md"
+							>
+								{/* Week Header */}
+								<div
+									className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-100 to-purple-100 cursor-pointer"
+									onClick={() => toggleWeek(index)}
+								>
+									<h2 className="text-xl font-bold flex items-center space-x-3">
+										<img
+											src={
+												week.weekImage ||
+												"https://via.placeholder.com/350"
+											}
+											alt={`Week ${index + 1}`}
+											className="h-10 w-10 object-contain "
+										/>
+										<span>
+											Week {index + 1}: {week.weekTitle}
+										</span>
+									</h2>
+									<div className="flex items-center space-x-2">
+										<button
+											onClick={() =>
+												handleOpenModal("week", {
+													weekIndex: index + 1,
+													title: week.weekTitle,
+													description:
+														week.weekDescription,
+													routineId: routineId,
+												})
+											}
+											className="px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+										>
+											Edit
+										</button>
+										<button
+											onClick={() => {
+												handleDelete(
+													routineId,
+													index + 1
+												);
+											}}
+											className="px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+										>
+											Delete
+										</button>
+										{openWeeks[index] ? (
+											<ChevronUp className="h-6 w-6 text-blue-600" />
+										) : (
+											<ChevronDown className="h-6 w-6 text-blue-600" />
+										)}
+									</div>
+								</div>
+
+								{/* Smooth Dropdown Content */}
+								<div
+									className={`transition-all duration-300 ease-in-out overflow-hidden ${
+										openWeeks[index]
+											? "max-h-screen"
+											: "max-h-0"
+									}`}
+								>
+									<div className="p-4 bg-white space-y-4">
+										<p className="text-gray-600">
+											{week.weekDescription}
+										</p>
+										{week.days.map((day, dayIndex) => (
+											<div
+												key={dayIndex}
+												className="border rounded-lg"
+											>
+												{/* Day Header */}
+												<div
+													className="flex justify-between items-center p-3 bg-gray-100 cursor-pointer"
+													onClick={() =>
+														toggleDay(
+															index,
+															dayIndex
+														)
+													}
+												>
+													<div>
+														<span className="font-semibold">
+															Day {dayIndex + 1}
+														</span>
+														: {day.dayTitle}
+													</div>
+													<div className="flex items-center space-x-2">
+														<button
+															onClick={() =>
+																handleOpenModal(
+																	"day",
+																	{
+																		routineId:
+																			routineId,
+																		dayIndex:
+																			dayIndex +
+																			1,
+																		weekIndex:
+																			index +
+																			1,
+																		title: day?.dayTitle,
+																		description:
+																			day?.dayDescription,
+																		taskName:
+																			day
+																				.task
+																				.taskName,
+																		taskDescription:
+																			day
+																				.task
+																				.taskDescription,
+																		taskDuration:
+																			day
+																				.task
+																				.taskDuration,
+																		productName:
+																			day
+																				.task
+																				.productName,
+																		productLink:
+																			day
+																				.task
+																				.productLink,
+																	}
+																)
+															}
+															className="px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md"
+														>
+															Edit
+														</button>
+														{openDays[
+															`${index}-${dayIndex}`
+														] ? (
+															<ChevronUp className="h-5 w-5 text-gray-500" />
+														) : (
+															<ChevronDown className="h-5 w-5 text-gray-500" />
+														)}
+													</div>
+												</div>
+
+												{/* Day Content */}
+												<div
+													className={`transition-all duration-300 ease-in-out overflow-hidden ${
+														openDays[
+															`${index}-${dayIndex}`
+														]
+															? "max-h-screen"
+															: "max-h-0"
+													}`}
+												>
+													<div className="p-4 space-y-3">
+														<div className="space-y-2">
+															<h4 className="font-medium text-gray-700">
+																Task
+															</h4>
+															<p>
+																{
+																	day.task
+																		.taskName
+																}
+															</p>
+															<p className="text-sm text-gray-500">
+																{
+																	day.task
+																		.taskDescription
+																}
+															</p>
+															<p className="text-sm text-gray-500">
+																Duration:{" "}
+																{
+																	day.task
+																		.taskDuration
+																}
+															</p>
+														</div>
+														<div className="flex items-center space-x-4">
+															<img
+																src={
+																	day.task
+																		.productImage ||
+																	"https://via.placeholder.com/350"
+																}
+																alt="Product"
+																className="h-20 w-20 object-contain rounded shadow-sm"
+															/>
+															<a
+																href={
+																	day.task
+																		.productLink
+																}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="text-blue-600 hover:underline font-semibold"
+															>
+																{
+																	day.task
+																		.productName
+																}
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										))}
+									</div>
+								</div>
+							</div>
+						))}
+
+						{/* Add Week Button */}
+						<div className="mt-4">
+							<button
+								onClick={addWeek}
+								className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+							>
+								Add Week
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* Unified Modal */}
+			{isModalOpen && (
+				<UnifiedModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					mode={modalMode}
+					data={modalData}
+					fetchRoutine={fetchRoutine}
+				/>
+			)}
 		</div>
 	);
 };

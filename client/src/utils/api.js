@@ -57,9 +57,11 @@ export const updateRoutine = (id, data) =>
 	api.put(`${BASE_ADMIN}/routines/updateRoutine/${id}`, data);
 
 export const addWeekToRoutine = (id, data) =>
-	api.put(`${BASE_ADMIN}/routines/addWeek/${id}`, data);
+	api.post(`${BASE_ADMIN}/routines/addWeek/${id}`, data);
+
 export const deleteWeekFromRoutine = (id, weekId) =>
 	api.delete(`${BASE_ADMIN}/routines/deleteWeek/${id}/${weekId}`);
+
 export const updateWeek = (id, weekId, data) =>
 	api.put(`${BASE_ADMIN}/routines/updateWeek/${id}/${weekId}`, data);
 export const updateDay = (id, weekId, dayId, data) =>

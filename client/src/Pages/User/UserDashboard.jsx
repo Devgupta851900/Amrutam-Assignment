@@ -22,7 +22,6 @@ const UserDashboard = () => {
 			// Update `user` in context and localStorage
 			const updatedUser = result.data.user;
 			setUser(updatedUser);
-			localStorage.setItem("user", JSON.stringify(updatedUser));
 
 			// Refetch user routines and suggested routines
 			await fetchAllRoutines(updatedUser);

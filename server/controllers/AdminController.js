@@ -118,7 +118,7 @@ export const createRoutine = async (req, res) => {
 export const updateRoutine = async (req, res) => {
 	try {
 		const { routineId } = req.params; // Get the routine ID from the request parameters
-		const { title, description } = req.body; // Get the new title and description from the request body
+		const { title, description, image } = req.body; // Get the new title and description from the request body
 
 		// Check if both title and description are provided
 		if (!title || !description) {
@@ -139,6 +139,7 @@ export const updateRoutine = async (req, res) => {
 		// Update the routine title and description
 		routine.title = title;
 		routine.description = description;
+		routine.image = image;
 
 		// Save the updated routine
 		await routine.save();
@@ -266,7 +267,7 @@ export const addWeekToRoutine = async (req, res) => {
 export const updateWeek = async (req, res) => {
 	try {
 		const { routineId, weekNumber } = req.params;
-		const { title, description } = req.body;
+		const { title, description, image } = req.body;
 		const weekIndex = weekNumber - 1;
 
 		if (!title || !description) {
@@ -285,6 +286,7 @@ export const updateWeek = async (req, res) => {
 				$set: {
 					[`data.weeks.${weekIndex}.weekTitle`]: title,
 					[`data.weeks.${weekIndex}.weekDescription`]: description,
+					[`data.weeks.${weekIndex}.weekImage`]: image,
 				},
 			},
 			{ new: true, runValidators: true }

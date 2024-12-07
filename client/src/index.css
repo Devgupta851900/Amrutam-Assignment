@@ -38,3 +38,33 @@
 		left: unset;
 	}
 }
+
+/* Hide scrollbar */
+/* Hide scrollbar for all browsers */
+body {
+	overflow: hidden; /* Disables scrolling globally */
+}
+
+/* If you want to hide the scrollbar but still allow scrolling */
+html {
+	height: 100%;
+	overflow: hidden; /* Removes scrollbar */
+}
+
+/* Optionally, if you want to allow scrolling but hide the scrollbar */
+html,
+body {
+	height: 100%;
+	overflow: auto;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none; /* Hide scrollbar in WebKit browsers (Chrome, Safari) */
+}
+
+html,
+body {
+	-ms-overflow-style: none; /* Hides scrollbar in IE and Edge */
+	scrollbar-width: none; /* Hides scrollbar in Firefox */
+}

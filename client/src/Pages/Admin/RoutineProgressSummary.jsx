@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getRoutineUserProgress } from "../../utils/api";
 
 const RoutineProgressSummary = () => {
 	const location = useLocation();
+	const navigate = useNavigate();
 	const [routineData, setRoutineData] = useState(null);
 	const [loading, setLoading] = useState(true);
 
@@ -36,6 +37,12 @@ const RoutineProgressSummary = () => {
 
 	return (
 		<div className="container mx-auto pt-16 px-4 md:px-8 lg:px-16">
+			<button
+				onClick={() => navigate(-1)}
+				className="mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
+			>
+				Back
+			</button>
 			<div className="flex flex-col items-center mb-8">
 				<img
 					src={

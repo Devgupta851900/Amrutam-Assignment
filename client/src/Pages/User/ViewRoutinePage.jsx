@@ -129,6 +129,9 @@ const ViewRoutinePage = () => {
 								<h1 className="text-4xl font-extrabold mb-2">
 									{routine.title}
 								</h1>
+								<div className="text-xl font-semibold">
+									{routine.description}
+								</div>
 								<div className="flex items-center space-x-4 mt-3">
 									<div className="flex items-center space-x-2">
 										<User className="h-5 w-5" />
@@ -165,7 +168,7 @@ const ViewRoutinePage = () => {
 										<img
 											src={week.weekImage}
 											alt={`Week ${index + 1}`}
-											className="h-10 w-10 object-cover rounded-full"
+											className="h-24 aspect-square object-cover "
 										/>
 										<span>
 											Week {index + 1}: {week.weekTitle}
