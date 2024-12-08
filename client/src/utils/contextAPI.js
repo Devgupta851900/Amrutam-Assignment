@@ -6,6 +6,7 @@ import {
 	getAllRoutineProgress,
 	getAllRoutines,
 	getAdminRoutineProgressSummary,
+	getUserDetails,
 } from "../utils/api";
 
 // Create AppContext
@@ -24,29 +25,53 @@ export const AppContextProvider = ({ children }) => {
 
 	const allSuggestedRoutines = useRef([]);
 
-	// Sync token and role from localStorage when the component mounts
-	useEffect(() => {
-		const storedToken = localStorage.getItem("token");
-		const storedRole = localStorage.getItem("role");
-		const storedUser = JSON.parse(localStorage.getItem("user"));
+	const fetchUserData = async () => {
+		try {
+			const response = await getUserDetails();
+			const userData = response.data.user;
+			setUser(userData);
 
-		if (storedToken) setToken(storedToken);
-		if (storedRole) setRole(storedRole);
-		if (storedUser) setUser(storedUser);
+			// Set role from token
+			const storedToken = localStorage.getItem("token");
+			if (storedToken) {
+				const decodedToken = jwtDecode(storedToken);
+				setRole(decodedToken.role);
+			}
 
-		setLoading(true);
-
-		if (
-			storedUser &&
-			storedRole === "admin" &&
-			adminRoutineProgressSummary.length === 0
-		) {
-			fetchAdminData(); // Only fetch admin data if it's not already fetched
-		} else if (storedUser && storedRole !== "admin") {
-			fetchAllRoutines(storedUser); // Fetch user-specific data
+			return userData;
+		} catch (error) {
+			console.error("Error fetching user details:", error);
+			logout();
+			return null;
 		}
+	};
 
+	// Only sync token and fetch user data when the component mounts
+	const initializeApp = async () => {
+		setLoading(true);
+		const storedToken = localStorage.getItem("token");
+
+		if (storedToken) {
+			setToken(storedToken);
+			const userData = await fetchUserData();
+
+			if (userData) {
+				const userRole = jwtDecode(storedToken).role;
+
+				if (
+					userRole === "admin" &&
+					adminRoutineProgressSummary.length === 0
+				) {
+					await fetchAdminData();
+				} else {
+					await fetchAllRoutines(userData);
+				}
+			}
+		}
 		setLoading(false);
+	};
+	useEffect(() => {
+		initializeApp();
 	}, []);
 
 	// Fetch routines and update userRoutines and suggestedRoutines
@@ -92,33 +117,35 @@ export const AppContextProvider = ({ children }) => {
 	};
 
 	// Function to log in a user
-	const setLogin = async (userData) => {
-		const { token } = userData;
-		const role = jwtDecode(token).role;
+	const setLogin = async (loginData) => {
+		const { token } = loginData;
 
+		// Only store token in localStorage
 		localStorage.setItem("token", token);
-		localStorage.setItem("role", role);
-		localStorage.setItem("user", JSON.stringify(userData.user));
-
-		setUser(userData.user);
 		setToken(token);
-		setRole(role);
 
-		if (role === "admin") {
+		// Fetch fresh user details
+		const userData = await fetchUserData();
+		if (!userData) return;
+
+		const userRole = jwtDecode(token).role;
+		if (userRole === "admin") {
 			await fetchAdminData();
 			navigate("/admin");
-		} else {
-			await fetchAllRoutines(userData.user);
+		} else if (userRole === "consumer") {
+			await fetchAllRoutines(userData);
 			navigate("/user");
+		} else {
+			navigate("/auth");
 		}
 	};
 
 	// Function to log out a user
 	const logout = () => {
+		// Only remove token from localStorage
 		localStorage.removeItem("token");
-		localStorage.removeItem("role");
-		localStorage.removeItem("user");
 
+		// Clear all state
 		setUser(null);
 		setToken(null);
 		setRole(null);
@@ -148,6 +175,8 @@ export const AppContextProvider = ({ children }) => {
 				logout,
 				fetchAllRoutines,
 				fetchAdminData,
+				fetchUserData,
+				initializeApp,
 			}}
 		>
 			{children}

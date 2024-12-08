@@ -12,7 +12,7 @@ const UserDashboard = () => {
 
 	const [loading, setLoading] = useState(false);
 
-	const { setUser, fetchAllRoutines } = useContext(AppContext);
+	const { setUser, initializeApp } = useContext(AppContext);
 
 	const handleJoin = async (routineId) => {
 		try {
@@ -26,7 +26,7 @@ const UserDashboard = () => {
 			setUser(updatedUser);
 
 			// Refetch user routines and suggested routines
-			await fetchAllRoutines(updatedUser);
+			await initializeApp()
 
 			// Navigate to the joined routine's page
 			navigate(`/user/routine/joined/${routineId}`);
@@ -175,11 +175,11 @@ const UserDashboard = () => {
 						No routines to show at this time
 					</div>
 				) : (
-					<div className="grid grid-cols-1 md:w-[90%] mx-auto lg:grid-cols-3 gap-8 h-[400px] ">
+					<div className="grid grid-cols-1 md:w-[90%] mx-auto lg:grid-cols-3 gap-8  ">
 						{suggestedRoutines?.map((routine, index) => (
 							<div
 								key={index}
-								className="group relative rounded-xl overflow-hidden shadow-lg transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
+								className="group h-[400px] relative rounded-xl overflow-hidden shadow-lg transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
 							>
 								<div
 									className="absolute inset-0 bg-contain bg-no-repeat bg-center z-0"

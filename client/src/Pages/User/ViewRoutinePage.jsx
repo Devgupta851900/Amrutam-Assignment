@@ -12,8 +12,7 @@ const ViewRoutinePage = () => {
 	const [openWeeks, setOpenWeeks] = useState({});
 	const [openDays, setOpenDays] = useState({});
 
-	const { fetchAllRoutines, setUser, loading, setLoading } =
-		useContext(AppContext);
+	const { initializeApp, loading, setLoading } = useContext(AppContext);
 
 	const location = useLocation();
 	const routineId = location.pathname.split("/").at(-1);
@@ -55,15 +54,10 @@ const ViewRoutinePage = () => {
 	const handleJoin = async () => {
 		try {
 			// Make the API request to join the routine
-			const result = await joinRoutine(routine._id);
-
-			// Update `user` in context and localStorage
-			const updatedUser = result.user;
-
-			setUser(updatedUser);
+			await joinRoutine(routine._id);
 
 			// Refetch user routines and suggested routines
-			await fetchAllRoutines(updatedUser);
+			await initializeApp();
 
 			// Navigate to the joined routine's page
 			navigate(`/user/routine/joined/${routine._id}`);
@@ -110,10 +104,10 @@ const ViewRoutinePage = () => {
 				{/* Back Button */}
 				<div className="flex justify-between ">
 					<button
-						onClick={() => navigate(-1)}
+						onClick={() => navigate("/user")}
 						className="mb-6 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md transition rounded-lg shadow-sm text-sm sm:text-base"
 					>
-						Back
+						Home
 					</button>
 					<button
 						onClick={handleJoin}

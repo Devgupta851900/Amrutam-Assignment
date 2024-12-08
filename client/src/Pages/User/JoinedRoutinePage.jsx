@@ -248,10 +248,10 @@ const JoinedRoutinePage = () => {
 	return (
 		<div className="container mx-auto px-4 py-20 max-w-7xl">
 			<button
-				onClick={() => navigate(-1)}
+				onClick={() => navigate("/user")}
 				className="mb-4 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
 			>
-				Back
+				Home
 			</button>
 
 			{/* Overall Progress Display */}

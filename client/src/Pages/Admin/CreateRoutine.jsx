@@ -84,8 +84,11 @@ const CreateRoutinePage = () => {
 			navigate("/admin");
 		} catch (error) {
 			// Error handling
+			if (error.status === 500) {
+				toast.error("Routine must conatin atleast one complete week");
+				return;
+			}
 			toast.error(error.message);
-			console.error("Error creating routine:", error.message);
 		} finally {
 			toast.dismiss(toastId);
 		}

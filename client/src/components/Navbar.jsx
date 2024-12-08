@@ -11,32 +11,10 @@ const Navbar = () => {
 	return (
 		<nav className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg p-4 fixed w-full top-0 z-50 h-16 flex justify-center ">
 			<div className="max-w-7xl w-full mx-auto flex justify-between items-center">
-				{/* Left - User Information */}
-				{token && (
-					<div className="flex items-center space-x-3 ">
-						{/* User Avatar */}
-						<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-							<span className="text-white font-semibold text-lg  ">
-								{user?.name?.charAt(0).toUpperCase()}
-							</span>
-						</div>
-
-						{/* User Details with Hover Card Effect */}
-						<div className=" hidden md:flex flex-col relative">
-							<span className="font-semibold text-white tracking-wide group-hover:text-blue-100 transition-colors duration-200 capitalize">
-								{user?.name}
-							</span>
-							<span className="text-sm text-blue-100 hover:text-blue-200 transition-colors duration-200">
-								{user?.email}
-							</span>
-						</div>
-					</div>
-				)}
-
 				{/* Center - Brand Name with Enhanced Design */}
 				<NavLink
 					to={role === "admin" ? "/admin" : "/user"}
-					className="absolute left-1/2 transform -translate-x-1/2 group"
+					className="group"
 				>
 					<h1 className="text-2xl font-bold tracking-wider  text-white relative px-4 py-1">
 						RoutinePro
