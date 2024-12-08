@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Loader  */
+
+body {
+	font-family: "Fredoka", serif;
+}
+
+.loader {
+	display: block;
+	--height-of-loader: 4px;
+	--loader-color: #0071e2;
+	width: 100%;
+	height: var(--height-of-loader);
+	border-radius: 30px;
+	background-color: rgba(0, 0, 0, 0.2);
+	position: relative;
+}
+
+.loader::before {
+	content: "";
+	position: absolute;
+	background: var(--loader-color);
+	top: 0;
+	left: 0;
+	width: 0%;
+	height: 100%;
+	border-radius: 30px;
+	animation: moving 1s ease-in-out infinite;
+}
+
+@keyframes moving {
+	50% {
+		width: 100%;
+	}
+
+	100% {
+		width: 0;
+		right: 0;
+		left: unset;
+	}
+}
+
+/* Hide scrollbar */
+/* Hide scrollbar for all browsers */
+body {
+	overflow: hidden; /* Disables scrolling globally */
+}
+
+/* If you want to hide the scrollbar but still allow scrolling */
+html {
+	height: 100%;
+	overflow: hidden; /* Removes scrollbar */
+}
+
+/* Optionally, if you want to allow scrolling but hide the scrollbar */
+html,
+body {
+	height: 100%;
+	overflow: auto;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none; /* Hide scrollbar in WebKit browsers (Chrome, Safari) */
+}
+
+html,
+body {
+	-ms-overflow-style: none; /* Hides scrollbar in IE and Edge */
+	scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
