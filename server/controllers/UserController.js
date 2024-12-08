@@ -224,8 +224,9 @@ export const getRoutineProgress = async (req, res) => {
 			return {
 				weekNumber: weekIndex + 1,
 				weekTitle: week.weekTitle || `Week ${weekIndex + 1}`,
-				dailyStatus: dayStatus,
 				weekCompletionPercentage,
+				completedDays: weekCompletedDays,
+				dailyStatus: dayStatus,
 			};
 		});
 

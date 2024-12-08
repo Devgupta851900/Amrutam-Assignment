@@ -150,14 +150,16 @@ const CreateRoutinePage = () => {
 	};
 
 	return (
-		<div className="container mx-auto pt-24 px-4 py-8 max-w-7xl">
-			<h1 className="text-4xl font-extrabold text-gray-700 mb-6">
+		<div className="container mx-auto pt-20 px-4 py-8 max-w-7xl">
+			<h1 className="text-4xl font-extrabold text-gray-700 mb-8 text-center md:text-left">
 				Create Your Routine
 			</h1>
-			<div className="bg-gray-100 shadow-lg rounded-lg p-6 space-y-6">
-				<div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+
+			<div className="bg-blue-50 shadow-lg rounded-lg p-4 md:p-6 space-y-6">
+				{/* Main Routine Info Section */}
+				<div className="bg-white shadow-md rounded-lg p-4 md:p-6 border border-blue-100">
 					<div className="space-y-4">
-						{/* Routine Title Section - Styled like day section */}
+						{/* Routine Title */}
 						<div className="flex items-center space-x-4">
 							<div className="flex-grow space-y-2">
 								<label className="block text-xl font-bold text-gray-700 mb-2">
@@ -172,14 +174,14 @@ const CreateRoutinePage = () => {
 											e.target.value
 										)
 									}
-									className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300"
+									className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300"
 									placeholder="Enter routine title"
 								/>
 							</div>
 						</div>
 
-						{/* Routine Description Section - Styled like day section */}
-						<div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+						{/* Routine Description */}
+						<div className="bg-blue-50 p-4 rounded-md border border-blue-100">
 							<label className="block text-xl font-bold text-gray-700 mb-2">
 								Routine Description
 							</label>
@@ -191,14 +193,14 @@ const CreateRoutinePage = () => {
 										e.target.value
 									)
 								}
-								className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 resize-y"
+								className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 resize-y"
 								rows="3"
 								placeholder="Enter routine description"
-							></textarea>
+							/>
 						</div>
 
-						{/* Routine Image Section - Styled like day section */}
-						<div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+						{/* Routine Image */}
+						<div className="bg-blue-50 p-4 rounded-md border border-blue-100">
 							<label className="block text-xl font-bold text-gray-700 mb-2">
 								Routine Image
 							</label>
@@ -217,23 +219,26 @@ const CreateRoutinePage = () => {
 
 				{/* Weeks Section */}
 				<div className="space-y-6">
-					<h2 className="text-2xl font-bold text-gray-800">Weeks</h2>
+					<h2 className="text-2xl font-bold text-gray-700">Weeks</h2>
 					{routine.weeks.map((week, weekIndex) => (
 						<div
 							key={weekIndex}
-							className="bg-white shadow-md rounded-lg p-6 border border-gray-200"
+							className="bg-white shadow-md rounded-lg p-4 md:p-6 border border-blue-100"
 						>
+							<div className="text-lg font-semibold text-blue-600 mb-4">
+								Week {weekIndex + 1}
+							</div>
 							<div className="space-y-4">
-								{/* Week Title Section - Styled like day section */}
+								{/* Week Title */}
 								<div className="flex items-center space-x-4">
 									<div className="flex-grow space-y-2">
-										<label className="text-xl font-bold text-gray-700 mb-2 flex justify-between">
+										<label className="text-xl font-bold text-gray-700 mb-2 flex justify-between items-center">
 											Week Title
 											<button
-												className=""
 												onClick={removeWeek}
+												className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm"
 											>
-												Remove week
+												Remove Week
 											</button>
 										</label>
 										<input
@@ -245,7 +250,7 @@ const CreateRoutinePage = () => {
 													e.target.value
 												)
 											}
-											className="w-full p-3 border rounded-md text-lg font-semibold"
+											className="w-full p-3 border border-blue-200 rounded-md text-lg font-semibold"
 											placeholder={`Week ${
 												weekIndex + 1
 											} Title`}
@@ -253,8 +258,8 @@ const CreateRoutinePage = () => {
 									</div>
 								</div>
 
-								{/* Week Description Section - Styled like day section */}
-								<div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+								{/* Week Description */}
+								<div className="bg-blue-50 p-4 rounded-md border border-blue-100">
 									<label className="block text-xl font-bold text-gray-700 mb-2">
 										Week Description
 									</label>
@@ -267,15 +272,15 @@ const CreateRoutinePage = () => {
 												e.target.value
 											)
 										}
-										className="w-full p-3 border rounded-md"
+										className="w-full p-3 border border-blue-200 rounded-md"
 										placeholder={`Week ${
 											weekIndex + 1
 										} Description`}
 									/>
 								</div>
 
-								{/* Week Image Section - Styled like day section */}
-								<div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+								{/* Week Image */}
+								<div className="bg-blue-50 p-4 rounded-md border border-blue-100">
 									<label className="block text-xl font-bold text-gray-700 mb-2">
 										Week Image
 									</label>
@@ -295,14 +300,20 @@ const CreateRoutinePage = () => {
 									{week.days.map((day, dayIndex) => (
 										<div
 											key={`week-${weekIndex}-day-${dayIndex}`}
-											className="bg-white shadow-md rounded-lg p-6 mb-4 border border-gray-200"
+											className="bg-white shadow-md rounded-lg p-4 md:p-6 mb-4 border border-blue-100"
 										>
-											<div className="block text-2xl text-end font-bold text-gray-700 mb-2 underline">{`Day ${
-												dayIndex + 1
-											}`}</div>
+											<div className="flex justify-between items-center mb-4">
+												<span className="text-blue-600 font-semibold">
+													Week {weekIndex + 1}
+												</span>
+												<span className="text-2xl font-bold text-gray-700 underline">
+													Day {dayIndex + 1}
+												</span>
+											</div>
+
 											<div className="flex flex-col space-y-4">
-												{/* Image and Basic Info Section */}
-												<div className="flex items-center space-x-4">
+												{/* Image and Basic Info */}
+												<div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4">
 													<ImageUploader
 														label="Day Image"
 														path={`weeks.${weekIndex}.days.${dayIndex}.task.dayImage`}
@@ -322,7 +333,6 @@ const CreateRoutinePage = () => {
 													/>
 
 													<div className="flex-grow space-y-2">
-														{/* Day Title */}
 														<input
 															type="text"
 															value={day.dayTitle}
@@ -333,13 +343,12 @@ const CreateRoutinePage = () => {
 																		.value
 																)
 															}
-															className="w-full p-2 border rounded-md text-lg font-semibold"
+															className="w-full p-2 border border-blue-200 rounded-md text-lg font-semibold"
 															placeholder={`Day ${
 																dayIndex + 1
 															} Title`}
 														/>
 
-														{/* Day Description */}
 														<input
 															type="text"
 															value={
@@ -352,7 +361,7 @@ const CreateRoutinePage = () => {
 																		.value
 																)
 															}
-															className="w-full p-2 border rounded-md text-gray-600"
+															className="w-full p-2 border border-blue-200 rounded-md text-gray-700"
 															placeholder={`Day ${
 																dayIndex + 1
 															} Description`}
@@ -360,10 +369,9 @@ const CreateRoutinePage = () => {
 													</div>
 												</div>
 
-												{/* Task Details Section */}
-												<div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+												{/* Task Details */}
+												<div className="bg-blue-50 p-4 rounded-md border border-blue-100">
 													<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-														{/* Task Name */}
 														<div>
 															<label className="block text-sm font-medium text-gray-700 mb-1">
 																Task Name
@@ -383,14 +391,13 @@ const CreateRoutinePage = () => {
 																			.value
 																	)
 																}
-																className="w-full p-2 border rounded-md"
+																className="w-full p-2 border border-blue-200 rounded-md"
 																placeholder={`Day ${
 																	dayIndex + 1
 																} Task Name`}
 															/>
 														</div>
 
-														{/* Task Description */}
 														<div>
 															<label className="block text-sm font-medium text-gray-700 mb-1">
 																Task Description
@@ -410,7 +417,7 @@ const CreateRoutinePage = () => {
 																			.value
 																	)
 																}
-																className="w-full p-2 border rounded-md"
+																className="w-full p-2 border border-blue-200 rounded-md"
 																placeholder={`Day ${
 																	dayIndex + 1
 																} Task Description`}
@@ -419,10 +426,9 @@ const CreateRoutinePage = () => {
 													</div>
 												</div>
 
-												{/* Product Details Section */}
-												<div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+												{/* Product Details */}
+												<div className="bg-blue-50 p-4 rounded-md border border-blue-100">
 													<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-														{/* Task Duration */}
 														<div>
 															<label className="block text-sm font-medium text-gray-700 mb-1">
 																Task Duration
@@ -442,14 +448,13 @@ const CreateRoutinePage = () => {
 																			.value
 																	)
 																}
-																className="w-full p-2 border rounded-md"
+																className="w-full p-2 border border-blue-200 rounded-md"
 																placeholder={`Day ${
 																	dayIndex + 1
 																} Task Duration`}
 															/>
 														</div>
 
-														{/* Product Name */}
 														<div>
 															<label className="block text-sm font-medium text-gray-700 mb-1">
 																Product Name
@@ -469,13 +474,12 @@ const CreateRoutinePage = () => {
 																			.value
 																	)
 																}
-																className="w-full p-2 border rounded-md"
+																className="w-full p-2 border border-blue-200 rounded-md"
 																placeholder="Product Name"
 															/>
 														</div>
 													</div>
 
-													{/* Product Link */}
 													<div className="mt-4">
 														<label className="block text-sm font-medium text-gray-700 mb-1">
 															Product Link
@@ -495,7 +499,7 @@ const CreateRoutinePage = () => {
 																		.value
 																)
 															}
-															className="w-full p-2 border rounded-md"
+															className="w-full p-2 border border-blue-200 rounded-md"
 															placeholder="Product Link"
 														/>
 													</div>
@@ -511,7 +515,7 @@ const CreateRoutinePage = () => {
 					{/* Add Week Button */}
 					<button
 						onClick={addWeek}
-						className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+						className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
 					>
 						Add Week
 					</button>
@@ -520,7 +524,7 @@ const CreateRoutinePage = () => {
 
 			<button
 				onClick={handleCreateRoutine}
-				className="px-3 py-2 m-4 bg-gray-300 text-black"
+				className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mt-6"
 			>
 				Create Routine
 			</button>

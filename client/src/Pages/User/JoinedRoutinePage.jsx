@@ -6,7 +6,15 @@ import {
 	changeCompletionStatus,
 } from "../../utils/api";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Clock, User, ChevronDown, ChevronUp, Pause, Play } from "lucide-react";
+import {
+	Clock,
+	User,
+	ChevronDown,
+	ChevronUp,
+	Pause,
+	Play,
+	Loader,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { AppContext } from "../../utils/contextAPI";
 
@@ -221,6 +229,7 @@ const JoinedRoutinePage = () => {
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center h-screen">
+				<Loader className="animate-spin h-12 w-12 text-blue-500" />
 				<div className="animate-pulse text-2xl text-gray-500">
 					Loading your routine...
 				</div>
@@ -237,60 +246,66 @@ const JoinedRoutinePage = () => {
 	}
 
 	return (
-		<div className="container mx-auto pt-24 px-4 py-8 max-w-7xl">
+		<div className="container mx-auto px-4 py-20 max-w-7xl">
+			<button
+				onClick={() => navigate(-1)}
+				className="mb-4 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
+			>
+				Back
+			</button>
+
 			{/* Overall Progress Display */}
-			<div className="mb-6 bg-gray-100 p-4 rounded-lg">
-				<h2 className="text-xl font-bold mb-2">Overall Progress</h2>
-				<div className="w-full bg-gray-300 rounded-full h-4">
+			<div className="mb-6 bg-gray-100 p-3 sm:p-4 rounded-lg">
+				<h2 className="text-lg sm:text-xl font-bold mb-2">
+					Overall Progress
+				</h2>
+				<div className="w-full bg-gray-300 rounded-full h-3 sm:h-4">
 					<div
-						className="bg-blue-600 h-4 rounded-full"
+						className="bg-blue-600 h-3 sm:h-4 rounded-full"
 						style={{
 							width: `${routineProgress.overallProgress.progressPercentage}%`,
 						}}
 					></div>
 				</div>
-				<p className="mt-2 text-gray-600">
+				<p className="mt-2 text-sm sm:text-base text-gray-600">
 					{routineProgress.overallProgress.completedDays} /{" "}
 					{routineProgress.overallProgress.totalDays} Days Completed
 				</p>
 			</div>
 
-			<button
-				onClick={() => navigate(-1)}
-				className="mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
-			>
-				Back
-			</button>
-
 			{routine && (
 				<div className="bg-white shadow-xl rounded-xl overflow-hidden">
-					{/* Header Section (remains the same) */}
-					<div className="relative bg-gradient-to-r from-blue-500 to-purple-600 text-white flex justify-between items-center">
-						<div>
+					{/* Header Section */}
+					<div className="relative bg-gradient-to-r h-[250px] sm:h-[300px] md:h-[400px] from-blue-500 to-purple-600 text-white rounded-lg shadow-lg overflow-hidden">
+						<div className="absolute inset-0">
 							<img
 								alt="routineImage"
 								src={routine.image}
-								className="object-contain h-[400px] aspect-auto "
+								className="object-cover h-full w-full blur-sm"
 							/>
+							<div className="absolute inset-0 bg-black bg-opacity-40"></div>
 						</div>
-						{/* Header content remains the same */}
-						<div className="absolute inset-0 bg-black opacity-50"></div>
-						<div className="relative flex justify-between items-center w-full p-8">
-							<div>
-								<h1 className="text-4xl font-extrabold mb-2">
+						{/* Content */}
+						<div className="relative w-[95%] bg-white bg-opacity-40 my-4 mx-auto rounded-lg text-gray-800 p-4 sm:p-6 md:p-8">
+							<div className="text-center md:text-left">
+								<h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 sm:mb-4 text-shadow-lg">
 									{routine.title}
 								</h1>
-								<div className="text-xl font-semibold">
+								<p className="text-base sm:text-lg font-medium text-gray-600">
 									{routine.description}
-								</div>
-								<div className="flex items-center space-x-4 mt-3">
-									<div className="flex items-center space-x-2">
-										<User className="h-5 w-5" />
-										<span>{routine.creator.name}</span>
+								</p>
+								<div className="flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4 sm:gap-6 mt-4">
+									<div className="flex items-center gap-2">
+										<User className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-300" />
+										<span className="capitalize font-bold text-sm sm:text-base">
+											{routine.creator.name}
+										</span>
 									</div>
-									<div className="flex items-center space-x-2">
-										<Clock className="h-5 w-5" />
-										<span>{routine.duration}</span>
+									<div className="flex items-center gap-2">
+										<Clock className="h-5 w-5 sm:h-6 sm:w-6 text-green-300" />
+										<span className="font-bold text-sm sm:text-base">
+											{routine.duration} Weeks
+										</span>
 									</div>
 								</div>
 							</div>
@@ -298,55 +313,74 @@ const JoinedRoutinePage = () => {
 					</div>
 
 					{/* Weeks Breakdown */}
-					<div className="p-6">
+					<div className="p-3 sm:p-6">
 						{routine.data.weeks.map((week, weekIndex) => {
 							const weekProgress =
 								routineProgress.weekProgress[weekIndex];
 							return (
 								<div
 									key={weekIndex}
-									className="mb-6 border rounded-lg shadow-md"
+									className="mb-4 sm:mb-6 border rounded-lg shadow-md"
 								>
 									{/* Week Header */}
 									<div
-										className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-100 to-purple-100 cursor-pointer"
+										className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 sm:p-4 bg-gradient-to-r from-blue-100 to-purple-100 cursor-pointer gap-3 sm:gap-0"
 										onClick={() => toggleWeek(weekIndex)}
 									>
-										<h2 className="text-xl font-bold flex items-center space-x-3">
+										<h2 className="text-base sm:text-xl font-bold flex items-center gap-2 sm:gap-3">
 											<img
 												src={week.weekImage}
 												alt={`Week ${weekIndex + 1}`}
-												className="h-10 w-10 object-cover rounded-full"
+												className="h-12 sm:h-16 aspect-square object-cover rounded-full"
 											/>
-											<span>
+											<span className="flex-shrink">
 												Week {weekIndex + 1}:{" "}
 												{week.weekTitle}
 											</span>
-											<span className="text-sm text-gray-600 ml-2">
-												(
-												{
-													weekProgress.weekCompletionPercentage
-												}
-												% Complete)
-											</span>
 										</h2>
-										{openWeeks[weekIndex] ? (
-											<ChevronUp className="h-6 w-6 text-blue-600" />
-										) : (
-											<ChevronDown className="h-6 w-6 text-blue-600" />
-										)}
+										<div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+											<div className="border border-gray-200 bg-gray-100 px-3 py-2 sm:px-4 rounded-lg flex-grow sm:flex-grow-0">
+												<h2 className="text-xs sm:text-sm font-bold mb-1 sm:mb-2">
+													Weekly Progress{" "}
+													<span className="text-xs text-gray-600 ml-1 sm:ml-2">
+														(
+														{
+															weekProgress.weekCompletionPercentage
+														}
+														% Complete)
+													</span>
+												</h2>
+												<div className="w-full bg-gray-300 rounded-full h-1">
+													<div
+														className="bg-blue-600 h-1 rounded-full"
+														style={{
+															width: `${weekProgress.weekCompletionPercentage}%`,
+														}}
+													></div>
+												</div>
+												<p className="text-xs text-gray-600 mt-1">
+													{weekProgress.completedDays}{" "}
+													Days Completed
+												</p>
+											</div>
+											{openWeeks[weekIndex] ? (
+												<ChevronUp className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 flex-shrink-0" />
+											) : (
+												<ChevronDown className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 flex-shrink-0" />
+											)}
+										</div>
 									</div>
 
 									{/* Week Content */}
 									<div
 										className={`transition-all duration-300 ease-in-out overflow-hidden ${
 											openWeeks[weekIndex]
-												? "max-h-screen"
+												? "max-h-fit"
 												: "max-h-0"
 										}`}
 									>
-										<div className="p-4 bg-white space-y-4">
-											<p className="text-gray-600">
+										<div className="p-3 sm:p-4 bg-white space-y-3 sm:space-y-4">
+											<p className="text-sm sm:text-base text-gray-600">
 												{week.weekDescription}
 											</p>
 											{week.days.map((day, dayIndex) => {
@@ -357,7 +391,7 @@ const JoinedRoutinePage = () => {
 												return (
 													<div
 														key={dayIndex}
-														className={`border rounded-lg ${
+														className={`border rounded-lg shadow-sm ${
 															isDayCompleted
 																? "opacity-50"
 																: ""
@@ -365,7 +399,7 @@ const JoinedRoutinePage = () => {
 													>
 														{/* Day Header */}
 														<div
-															className="flex justify-between items-center p-3 bg-gray-100 cursor-pointer"
+															className="flex justify-between items-center p-3 bg-gradient-to-r from-gray-50 to-gray-100 border-b cursor-pointer hover:bg-gray-100 transition-colors duration-200"
 															onClick={() =>
 																toggleDay(
 																	weekIndex,
@@ -373,15 +407,20 @@ const JoinedRoutinePage = () => {
 																)
 															}
 														>
-															<div>
-																<span className="font-semibold">
+															<div className="text-sm sm:text-base">
+																<span className="font-medium text-gray-800">
 																	Day{" "}
 																	{dayIndex +
 																		1}
 																</span>
-																: {day.dayTitle}
+																<span className="text-gray-600">
+																	:{" "}
+																	{
+																		day.dayTitle
+																	}
+																</span>
 																{isDayCompleted && (
-																	<span className="ml-2 text-green-600 text-sm">
+																	<span className="ml-2 text-emerald-600 text-xs sm:text-sm font-medium">
 																		Completed
 																	</span>
 																)}
@@ -389,9 +428,9 @@ const JoinedRoutinePage = () => {
 															{openDays[
 																`${weekIndex}-${dayIndex}`
 															] ? (
-																<ChevronUp className="h-5 w-5 text-gray-500" />
+																<ChevronUp className="h-5 w-5 text-gray-400" />
 															) : (
-																<ChevronDown className="h-5 w-5 text-gray-500" />
+																<ChevronDown className="h-5 w-5 text-gray-400" />
 															)}
 														</div>
 
@@ -405,69 +444,78 @@ const JoinedRoutinePage = () => {
 																	: "max-h-0"
 															}`}
 														>
-															<div className="p-4 space-y-3">
-																<div className="space-y-2">
-																	<h4 className="font-medium text-gray-700">
+															<div className="p-4 space-y-4">
+																<div className="space-y-3">
+																	<h4 className="font-medium text-gray-800 text-sm sm:text-base">
 																		Task
 																	</h4>
-																	<p>
+																	<p className="text-sm sm:text-base text-gray-700">
 																		{
 																			day
 																				.task
 																				.taskName
 																		}
 																	</p>
-																	<p className="text-sm text-gray-500">
+																	<p className="text-xs sm:text-sm text-gray-500">
 																		{
 																			day
 																				.task
 																				.taskDescription
 																		}
 																	</p>
-																	<p className="text-sm text-gray-500">
+																	<p className="text-xs sm:text-sm text-gray-500">
 																		Duration:{" "}
 																		{
 																			day
 																				.task
 																				.taskDuration
-																		}
+																		}{" "}
+																		Minutes
 																	</p>
 																</div>
-																<button
-																	onClick={() =>
-																		markAsCompleted(
-																			weekIndex,
-																			dayIndex
-																		)
-																	}
-																	disabled={
-																		isDayCompleted
-																	}
-																	className={`bg-black py-2 px-4 text-white rounded-md ${
-																		isDayCompleted
-																			? "opacity-50 cursor-not-allowed"
-																			: ""
-																	}`}
-																>
-																	{isDayCompleted
-																		? "Completed"
-																		: "Mark as Completed"}
-																</button>
-																{!isDayCompleted && (
-																	<TaskTimer
-																		duration={
-																			180
-																		}
-																		onComplete={() =>
-																			handleDayStatusUpdate(
+
+																<div className="space-y-4">
+																	<button
+																		onClick={() =>
+																			markAsCompleted(
 																				weekIndex,
 																				dayIndex
 																			)
 																		}
-																		dayId={`${weekIndex}-${dayIndex}`}
-																	/>
-																)}
-																<div className="flex items-center space-x-4">
+																		disabled={
+																			isDayCompleted
+																		}
+																		className={` bg-black py-2 px-4 text-sm sm:text-base text-white rounded-md shadow-sm transition-all duration-200 hover:bg-gray-800 hover:shadow ${
+																			isDayCompleted
+																				? "opacity-50 cursor-not-allowed"
+																				: ""
+																		} `}
+																	>
+																		{isDayCompleted
+																			? "Completed"
+																			: "Mark as Completed"}
+																	</button>
+
+																	{!isDayCompleted && (
+																		<TaskTimer
+																			duration={
+																				day
+																					.task
+																					.taskDuration *
+																				60
+																			}
+																			onComplete={() =>
+																				handleDayStatusUpdate(
+																					weekIndex,
+																					dayIndex
+																				)
+																			}
+																			dayId={`${weekIndex}-${dayIndex}`}
+																		/>
+																	)}
+																</div>
+
+																<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-gray-50 p-3 rounded-lg">
 																	<img
 																		src={
 																			day
@@ -476,7 +524,7 @@ const JoinedRoutinePage = () => {
 																			"https://rukminim2.flixcart.com/image/612/612/xif0q/hair-oil/i/n/c/-original-imagt8ekcf22wvxa.jpeg?q=70"
 																		}
 																		alt="Product"
-																		className="h-20 w-20 object-contain rounded shadow-sm"
+																		className="h-20 w-20 object-contain rounded-md shadow-sm bg-white p-2"
 																	/>
 																	<a
 																		href={
@@ -486,7 +534,7 @@ const JoinedRoutinePage = () => {
 																		}
 																		target="_blank"
 																		rel="noopener noreferrer"
-																		className="text-blue-600 hover:underline font-semibold"
+																		className="text-sm sm:text-base text-blue-600 hover:text-blue-700 hover:underline font-medium transition-colors duration-200"
 																	>
 																		{
 																			day

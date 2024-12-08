@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { login, signup } from "../utils/api.js";
 
 import { AppContext } from "../utils/contextAPI.js";
+import { Loader } from "lucide-react";
 
 const Auth = () => {
 	const { setLogin } = useContext(AppContext);
@@ -98,8 +99,21 @@ const Auth = () => {
 		}
 	};
 
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<div className="flex flex-col items-center space-y-4">
+					<Loader className="animate-spin h-12 w-12 text-blue-500" />
+					<div className="text-lg text-gray-500">
+						Loading your routine...
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className=" h-screen pt-12 flex flex-col md:flex-row">
+		<div className=" h-screen mt-16 flex flex-col md:flex-row">
 			{/* Left Section */}
 			<div className="w-full md:w-1/2 p-4 md:p-8 flex flex-col relative">
 				<div className="flex flex-col sm:flex-row justify-between items-center mb-8">

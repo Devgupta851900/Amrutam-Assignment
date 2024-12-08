@@ -580,6 +580,7 @@ export const getAdminRoutinesProgressSummary = async (req, res) => {
 				return {
 					routineId: routine._id,
 					routineTitle: routine.title,
+					routineDescription: routine.description,
 					routineImage: routine.image,
 					totalUsers: usersProgress.length,
 					averageProgressPercentage:

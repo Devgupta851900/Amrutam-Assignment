@@ -25,139 +25,144 @@ const AdminDashboard = () => {
 	};
 
 	return (
-		<div className="min-h-screen pt-24 bg-[#F5F5DC] p-8">
-			{/* Beige background */}
-			<div className="max-w-7xl mx-auto">
-				{/* Header */}
-				<div className="bg-gradient-to-r from-[#8B4513] to-[#A0522D] text-[#F5DEB3] rounded-lg shadow-2xl p-6 mb-10">
+		<div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
+			{/* Main container with responsive padding and max width */}
+			<div className="max-w-7xl mx-auto my-16 sm:mt-12">
+				{/* Header - Responsive padding and font sizes */}
+				<div className="bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-lg shadow-2xl p-4 sm:p-6 mb-6 sm:mb-10">
 					<div className="flex items-center justify-between">
-						<h1 className="text-4xl font-extrabold tracking-tight">
+						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
 							Admin Dashboard
 						</h1>
-						<ChartBarIcon className="w-12 h-12 text-[#F5DEB3]/70" />
+						<ChartBarIcon className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-gray-100" />
 					</div>
-					<p className="mt-2 text-[#D2B48C]">
+					<p className="mt-2 text-sm sm:text-base text-white">
 						Comprehensive overview of routine progress and user
 						engagement
 					</p>
 				</div>
 
-				{/* Routine Cards Grid */}
-				<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+				{/* Responsive Grid */}
+				<div className="grid gap-4 sm:gap-6 grid-cols-1 md:w-[90%] lg:w-full mx-auto lg:grid-cols-3">
 					{loading ? (
-						<div className="col-span-full flex justify-center items-center">
-							<div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#8B4513]"></div>
+						<div className="col-span-full flex justify-center items-center py-8">
+							<div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-4 border-gray-700"></div>
 						</div>
 					) : adminRoutineProgressSummary.length > 0 ? (
 						adminRoutineProgressSummary.map((routine) => (
 							<div
 								key={routine.routineId}
-								className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-[#D2B48C]"
+								className="h-[350px] sm:h-[400px] relative rounded-xl overflow-hidden shadow-lg transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
 							>
-								{/* Card Image Background */}
-								<div className="relative">
-									<div
-										className="w-full h-48 bg-cover bg-center rounded-t-xl"
-										style={{
-											backgroundImage: `url(${
-												routine.routineImage ||
-												"https://via.placeholder.com/350"
-											})`,
-											backgroundBlendMode: "multiply",
-											backgroundColor:
-												"rgba(210, 180, 140, 0.3)", // Soft beige overlay
-										}}
-									>
-										<div className="absolute top-4 right-4 bg-white/80 rounded-full p-2 shadow-md">
-											<UsersIcon className="w-6 h-6 text-[#8B4513]" />
-										</div>
-									</div>
-								</div>
+								{/* Background Image */}
+								<div
+									className="absolute inset-0 bg-contain bg-no-repeat bg-center z-0"
+									style={{
+										backgroundImage: `url(${routine?.routineImage})`,
+										filter: "brightness(0.6)",
+									}}
+								/>
 
-								{/* Card Content */}
-								<div className="p-6 bg-[#F5E6D3]">
-									{" "}
-									{/* Light beige background */}
-									<h3 className="text-2xl font-bold text-[#6B4423] mb-3">
-										{routine.routineTitle}
-									</h3>
-									<div className="space-y-2 mb-4">
-										<div className="flex justify-between items-center">
-											<span className="text-[#8B4513]">
-												Total Users
-											</span>
-											<span className="font-bold text-[#6B4423]">
-												{routine.totalUsers}
-											</span>
-										</div>
-
-										<div className="w-full bg-[#D2B48C] rounded-full h-2.5">
-											<div
-												className="bg-[#8B4513] h-2.5 rounded-full"
-												style={{
-													width: `${routine.averageProgressPercentage}%`,
-												}}
-											></div>
+								{/* Content Container */}
+								<div className="relative z-10 p-3 sm:p-4 lg:p-6 h-full bg-gradient-to-t from-black/60 via-black/40 to-transparent rounded-xl">
+									<div className="flex flex-col justify-between h-full">
+										{/* Stats Section */}
+										<div className="space-y-3 sm:space-y-4">
+											<div className="bg-white rounded-md shadow-md p-2 sm:p-3">
+												<p className="text-gray-800 text-xs sm:text-sm font-medium flex justify-start items-center gap-2">
+													<div className="bg-white rounded-full p-1 sm:p-2 shadow-md">
+														<UsersIcon className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
+													</div>
+													<div>
+														Total Users:{" "}
+														{routine.totalUsers}
+													</div>
+												</p>
+												<p className="text-xs sm:text-sm font-semibold text-gray-800 mt-1">
+													Average Progress Percentage:{" "}
+													{
+														routine.averageProgressPercentage
+													}
+													%
+												</p>
+												<div className="relative my-1 h-1 bg-gray-300 rounded-full overflow-hidden">
+													<div
+														className="absolute top-0 left-0 h-full bg-blue-500 transition-all duration-500"
+														style={{
+															width: `${routine.averageProgressPercentage}%`,
+														}}
+													/>
+												</div>
+											</div>
 										</div>
 
-										<div className="flex justify-between items-center">
-											<span className="text-[#8B4513]">
-												Avg. Progress
-											</span>
-											<span className="font-bold text-[#6B4423]">
-												{
-													routine.averageProgressPercentage
-												}
-												%
-											</span>
+										{/* Info and Actions Section */}
+										<div className="flex flex-col bg-white text-gray-800 rounded-md shadow-md p-2 sm:p-3">
+											<div>
+												<h2 className="text-lg sm:text-xl font-semibold">
+													{routine.routineTitle}
+												</h2>
+												<p className="text-xs sm:text-sm font-semibold">
+													{routine.routineDescription}
+												</p>
+											</div>
+
+											{/* Action Buttons */}
+											<div className="flex flex-wrap mt-2 gap-1 sm:gap-2">
+												<NavLink
+													to={`/admin/routine/summary/${routine.routineId}`}
+													className="flex-1 min-w-0"
+												>
+													<button className="w-full bg-blue-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1">
+														<ChartBarIcon className="w-4 h-4" />
+														<span className="text-xs sm:text-sm">
+															Stats
+														</span>
+													</button>
+												</NavLink>
+
+												<button
+													onClick={() =>
+														handleDelete(
+															routine.routineId
+														)
+													}
+													className="flex-1 min-w-0 bg-blue-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-xs sm:text-sm"
+												>
+													Delete
+												</button>
+
+												<NavLink
+													to={`/admin/routine/view-edit/${routine.routineId}`}
+													className="flex-none"
+												>
+													<button className="h-full bg-blue-500 text-white px-2 sm:px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
+														<PencilIcon className="w-4 h-4" />
+													</button>
+												</NavLink>
+											</div>
 										</div>
-									</div>
-									{/* Action Buttons */}
-									<div className="flex space-x-3">
-										<NavLink
-											to={`/admin/routine/summary/${routine.routineId}`}
-											className="flex-1"
-										>
-											<button className="w-full flex items-center justify-center bg-[#8B4513] text-[#F5DEB3] py-2 px-4 rounded-lg hover:bg-[#6B4423] transition-colors">
-												<ChartBarIcon className="w-5 h-5 mr-2" />
-												Detailed Stats
-											</button>
-										</NavLink>
-										<NavLink
-											to={`/admin/routine/view-edit/${routine.routineId}`}
-											className="flex-1"
-										>
-											<button className="bg-[#D2B48C] text-[#6B4423] p-2 rounded-lg hover:bg-[#C0A376] transition-colors">
-												<PencilIcon className="w-5 h-5" />
-											</button>
-										</NavLink>
-										<button
-											onClick={() =>
-												handleDelete(routine.routineId)
-											}
-											className="bg-[#D2B48C] text-[#6B4423] p-2 rounded-lg hover:bg-[#C0A376] transition-colors"
-										>
-											Delete
-										</button>
 									</div>
 								</div>
 							</div>
 						))
 					) : (
-						<div className="col-span-full bg-[#F5E6D3] rounded-xl shadow-lg p-8 text-center">
-							<p className="text-xl text-[#8B4513]">
+						<div className="col-span-full bg-white rounded-xl shadow-lg p-4 sm:p-8 text-center">
+							<p className="text-lg sm:text-xl text-gray-700">
 								No routine data available
 							</p>
 						</div>
 					)}
 				</div>
 
-				{/* Create New Routine Button */}
-				<div className="mt-8 flex justify-center">
-					<NavLink to="/admin/routine/create">
-						<button className="flex items-center bg-gradient-to-r from-[#8B4513] to-[#A0522D] text-[#F5DEB3] py-3 px-6 rounded-full shadow-lg hover:scale-105 transition-transform">
-							<PlusIcon className="w-6 h-6 mr-2" />
-							Create New Routine
+				{/* Create New Routine Button - Responsive positioning */}
+				<div className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-xs sm:max-w-sm">
+					<NavLink to="/admin/routine/create" className="block">
+						<button className="w-full flex items-center justify-center bg-gradient-to-r from-blue-700 to-blue-500 text-white py-2 sm:py-3 px-4 sm:px-6 rounded-full shadow-lg hover:scale-105 transition-transform">
+							<PlusIcon className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
+							<span className="text-sm sm:text-base">
+								Create New Routine
+							</span>
 						</button>
 					</NavLink>
 				</div>

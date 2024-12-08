@@ -9,7 +9,7 @@ const Navbar = () => {
 	const user = JSON.parse(localStorage.getItem("user"));
 
 	return (
-		<nav className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg p-4 fixed w-full top-0 z-10 h-16 flex justify-center ">
+		<nav className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg p-4 fixed w-full top-0 z-50 h-16 flex justify-center ">
 			<div className="max-w-7xl w-full mx-auto flex justify-between items-center">
 				{/* Left - User Information */}
 				{token && (
