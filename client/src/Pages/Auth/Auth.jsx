@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import authImage from "../assets/authImage.jpeg";
+import authImage from "../../assets/authImage.jpeg";
 import { toast } from "react-hot-toast";
 import { login, signup } from "../../utils/api.js";
 
