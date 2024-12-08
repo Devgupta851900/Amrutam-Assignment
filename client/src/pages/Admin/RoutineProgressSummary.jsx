@@ -68,7 +68,7 @@ const RoutineProgressSummary = () => {
 								"/api/placeholder/300/300"
 							}
 							alt={routineData.routineTitle}
-							className="relative w-full h-full object-fill rounded-2xl shadow-lg 
+							className="relative w-full h-full object-contain rounded-2xl shadow-lg 
                        transform transition-all duration-300 hover:scale-105"
 						/>
 					</div>
