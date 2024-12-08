@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
 	const { token, logout, role } = useContext(AppContext);
 
-	const user = JSON.parse(localStorage.getItem("user"));
+	// const user = JSON.parse(localStorage.getItem("user"));
 
 	return (
 		<nav className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg p-4 fixed w-full top-0 z-50 h-16 flex justify-center ">

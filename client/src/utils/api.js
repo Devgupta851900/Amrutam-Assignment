@@ -1,8 +1,8 @@
 import axios from "axios";
-const BASE_AUTH = "http://localhost:4000/api/v1/auth";
-const BASE_ADMIN = "http://localhost:4000/api/v1/admin";
-const BASE_USER = "http://localhost:4000/api/v1/user";
-const BASE_PUBLIC = "http://localhost:4000/api/v1";
+const BASE_AUTH = "https://amrutam-assignment.onrender.com/api/v1/auth";
+const BASE_ADMIN = "https://amrutam-assignment.onrender.com/api/v1/admin";
+const BASE_USER = "https://amrutam-assignment.onrender.com/api/v1/user";
+const BASE_PUBLIC = "https://amrutam-assignment.onrender.com/api/v1";
 
 // Create a reusable Axios instance
 export const api = axios.create({

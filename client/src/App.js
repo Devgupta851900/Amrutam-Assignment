@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Auth from "./pages/Auth";
 import UserDashboard from "./pages/User/UserDashboard";
 import { useContext } from "react";
 import { AppContext } from "./utils/contextAPI";
+import Auth from "./pages/Auth";
 import Navbar from "./components/Navbar";
 import JoinedRoutinePage from "./pages/User/JoinedRoutinePage";
 import ViewRoutinePage from "./pages/User/ViewRoutinePage";
