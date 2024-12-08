@@ -2,7 +2,7 @@
 
 # dependencies
 /client/node_modules/
-/client
+/client/.env
 /server/node_modules/
 /server/.env
 /.pnp
