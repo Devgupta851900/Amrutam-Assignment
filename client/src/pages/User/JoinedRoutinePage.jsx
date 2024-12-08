@@ -472,6 +472,13 @@ const JoinedRoutinePage = () => {
 														>
 															<div className="p-4 space-y-4">
 																<div className="space-y-3">
+																	<p className="text-sm italic sm:text-lg text-gray-600">
+																		&quot;
+																		{
+																			day.dayDescription
+																		}
+																		&quot;
+																	</p>
 																	<h4 className="font-medium text-gray-800 text-sm sm:text-base">
 																		Task
 																	</h4>
