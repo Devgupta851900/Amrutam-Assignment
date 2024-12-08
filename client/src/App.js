@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import UserDashboard from "./pages/User/UserDashboard";
 import { useContext } from "react";
 import { AppContext } from "./utils/contextAPI";
-import Auth from "./pages/Auth";
 import Navbar from "./components/Navbar";
 import JoinedRoutinePage from "./pages/User/JoinedRoutinePage";
 import ViewRoutinePage from "./pages/User/ViewRoutinePage";
@@ -10,6 +9,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import RoutineProgressSummary from "./pages/Admin/RoutineProgressSummary";
 import CreateRoutine from "./pages/Admin/CreateRoutine";
 import ViewEditRoutine from "./pages/Admin/ViewEditRoutine";
+import Auth from "./pages/Auth/Auth";
 
 const App = () => {
 	const { token, role } = useContext(AppContext);

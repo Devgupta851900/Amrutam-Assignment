@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import authImage from "../assets/authImage.jpeg";
 import { toast } from "react-hot-toast";
-import { login, signup } from "../utils/api.js";
+import { login, signup } from "../../utils/api.js";
 
-import { AppContext } from "../utils/contextAPI.js";
+import { AppContext } from "../../utils/contextAPI.js";
 import { Loader } from "lucide-react";
 
 const Auth = () => {
