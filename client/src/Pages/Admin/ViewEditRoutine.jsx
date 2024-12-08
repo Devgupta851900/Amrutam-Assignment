@@ -117,7 +117,7 @@ const ViewEditRoutine = () => {
 			{routine && (
 				<div className="bg-white shadow-xl rounded-xl overflow-hidden">
 					{/* Header Section */}
-					<div className="relative bg-gradient-to-r h-[400px] from-blue-500 to-purple-600 text-white rounded-lg shadow-lg overflow-hidden">
+					<div className="relative bg-gradient-to-r min-h-[500px] from-blue-500 to-purple-600 text-white rounded-lg shadow-lg overflow-hidden">
 						<div className="absolute inset-0">
 							<img
 								alt="routineImage"
@@ -187,7 +187,11 @@ const ViewEditRoutine = () => {
 											className="h-12 sm:h-16 aspect-square object-cover rounded-full"
 										/>
 										<span className="flex-shrink">
-											Week {index + 1}: {week.weekTitle}
+											Week {index + 1}:
+											<span className="underline">
+												{" "}
+												{week.weekTitle}
+											</span>
 										</span>
 									</h2>
 									<div className="flex items-center w-full sm:w-fit justify-between space-x-2">
@@ -232,13 +236,13 @@ const ViewEditRoutine = () => {
 								<div
 									className={`transition-all duration-300 ease-in-out overflow-hidden ${
 										openWeeks[index]
-											? "max-h-screen"
+											? "max-h-fit"
 											: "max-h-0"
 									}`}
 								>
 									<div className="p-3 sm:p-4 bg-white space-y-3 sm:space-y-4">
-										<p className="text-sm sm:text-base text-gray-600">
-											{week.weekDescription}
+										<p className="text-sm italic sm:text-lg text-gray-600">
+											&quot;{week.weekDescription}&quot;
 										</p>
 										{week.days.map((day, dayIndex) => (
 											<div
@@ -255,10 +259,10 @@ const ViewEditRoutine = () => {
 														)
 													}
 												>
-													<div>
+													<div className="font-bold underline">
 														<span className="font-semibold">
 															Day {dayIndex + 1}
-														</span>
+														</span> {" "}
 														: {day.dayTitle}
 													</div>
 													<div className="flex justify-between w-full mt-1 sm:mt-0 sm:w-fit items-center space-x-2">
@@ -326,6 +330,13 @@ const ViewEditRoutine = () => {
 													}`}
 												>
 													<div className="p-4 space-y-3">
+														<p className="text-sm italic sm:text-lg text-gray-600">
+															&quot;
+															{
+																day.dayDescription
+															}
+															&quot;
+														</p>
 														<div className="space-y-2">
 															<h4 className="font-medium text-gray-700">
 																Task

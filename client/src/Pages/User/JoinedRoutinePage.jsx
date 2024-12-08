@@ -147,17 +147,21 @@ const JoinedRoutinePage = () => {
 				[dayIndex]: true,
 			};
 
-			// Recalculate week completion percentage
+			// Recalculate week completion percentage and completed days
 			const completedDays = updatedWeekProgress[
 				weekIndex
 			].dailyStatus.filter(
 				(day) => Object.values(day)[0] === true
 			).length;
+
 			updatedWeekProgress[weekIndex].weekCompletionPercentage = (
 				(completedDays /
 					updatedWeekProgress[weekIndex].dailyStatus.length) *
 				100
 			).toFixed(2);
+
+			// Update completed days count for the week
+			updatedWeekProgress[weekIndex].completedDays = completedDays;
 
 			// Update routine progress
 			setRoutineProgress((prev) => ({
@@ -174,6 +178,7 @@ const JoinedRoutinePage = () => {
 				},
 			}));
 
+			console.log(routineProgress);
 			toast.success("Day marked as completed successfully!");
 		} catch (error) {
 			// Revert to previous state if an error occurs
@@ -192,32 +197,48 @@ const JoinedRoutinePage = () => {
 				[dayIndex]: true,
 			};
 
-			// Recalculate week completion percentage
+			// Recalculate week completion percentage and completed days
 			const completedDays = updatedWeekProgress[
 				weekIndex
 			].dailyStatus.filter(
 				(day) => Object.values(day)[0] === true
 			).length;
+
 			updatedWeekProgress[weekIndex].weekCompletionPercentage = (
 				(completedDays /
 					updatedWeekProgress[weekIndex].dailyStatus.length) *
 				100
 			).toFixed(2);
 
+			// Update completed days count for the week
+			updatedWeekProgress[weekIndex].completedDays = completedDays;
+
 			// Update routine progress
-			setRoutineProgress((prev) => ({
-				...prev,
-				weekProgress: updatedWeekProgress,
-				overallProgress: {
-					...prev.overallProgress,
-					completedDays: prev.overallProgress.completedDays + 1,
-					progressPercentage: (
-						((prev.overallProgress.completedDays + 1) /
-							prev.overallProgress.totalDays) *
-						100
-					).toFixed(2),
-				},
-			}));
+			setRoutineProgress((prev) => {
+				// Update the weekProgress
+				const newWeekProgress = [...prev.weekProgress];
+				newWeekProgress[weekIndex] = {
+					...newWeekProgress[weekIndex],
+					dailyStatus: updatedWeekProgress[weekIndex].dailyStatus,
+					weekCompletionPercentage:
+						updatedWeekProgress[weekIndex].weekCompletionPercentage,
+					completedDays: completedDays, // Use the calculated completedDays value
+				};
+
+				return {
+					...prev,
+					weekProgress: newWeekProgress,
+					overallProgress: {
+						...prev.overallProgress,
+						completedDays: prev.overallProgress.completedDays + 1,
+						progressPercentage: (
+							((prev.overallProgress.completedDays + 1) /
+								prev.overallProgress.totalDays) *
+							100
+						).toFixed(2),
+					},
+				};
+			});
 
 			toast.success("Day status updated successfully!");
 		} catch (error) {
@@ -359,7 +380,12 @@ const JoinedRoutinePage = () => {
 													></div>
 												</div>
 												<p className="text-xs text-gray-600 mt-1">
-													{weekProgress.completedDays}{" "}
+													{
+														routineProgress
+															.weekProgress[
+															weekIndex
+														]?.completedDays
+													}{" "}
 													Days Completed
 												</p>
 											</div>

@@ -1,7 +1,14 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../utils/contextAPI";
 import { NavLink } from "react-router-dom";
-import { ChartBarIcon, PlusIcon, PencilIcon, UsersIcon } from "lucide-react";
+import {
+	ChartBarIcon,
+	PlusIcon,
+	PencilIcon,
+	UsersIcon,
+	UserRound,
+	Loader,
+} from "lucide-react";
 import { deleteRoutine } from "../../utils/api";
 
 const AdminDashboard = () => {
@@ -34,7 +41,7 @@ const AdminDashboard = () => {
 						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
 							Admin Dashboard
 						</h1>
-						<ChartBarIcon className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-gray-100" />
+						<UserRound className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-gray-100" />
 					</div>
 					<p className="mt-2 text-sm sm:text-base text-white">
 						Comprehensive overview of routine progress and user
@@ -46,7 +53,10 @@ const AdminDashboard = () => {
 				<div className="grid gap-4 sm:gap-6 grid-cols-1 md:w-[90%] lg:w-full mx-auto lg:grid-cols-3">
 					{loading ? (
 						<div className="col-span-full flex justify-center items-center py-8">
-							<div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-4 border-gray-700"></div>
+							<Loader className="animate-spin h-12 w-12 text-blue-500" />
+							<div className="animate-pulse text-2xl text-gray-500">
+								Loading your routine...
+							</div>
 						</div>
 					) : adminRoutineProgressSummary.length > 0 ? (
 						adminRoutineProgressSummary.map((routine) => (
@@ -103,7 +113,7 @@ const AdminDashboard = () => {
 													{routine.routineTitle}
 												</h2>
 												<p className="text-xs sm:text-sm font-semibold">
-													{routine.routineDescription}
+													{routine.routineDescription.split(".").at(0)}.
 												</p>
 											</div>
 

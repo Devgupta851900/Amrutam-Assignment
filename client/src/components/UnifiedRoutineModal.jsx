@@ -1,19 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import ImageUploader from "./ImageUploader";
-import {
-	addWeekToRoutine,
-	updateWeek,
-	updateDay,
-	updateRoutine,
-} from "../utils/api";
+import { updateWeek, updateDay, updateRoutine } from "../utils/api";
 
 const UnifiedModal = ({ isOpen, onClose, mode, data = {}, fetchRoutine }) => {
 	// Initialize state based on mode and data
 	const initialState = {
 		title: data.title || "",
 		description: data.description || "",
-		order: data.order || "",
 		image: data.image || "",
 		duration: data.duration || "",
 		routines: data.routines || [],
@@ -59,12 +53,12 @@ const UnifiedModal = ({ isOpen, onClose, mode, data = {}, fetchRoutine }) => {
 					break;
 				case "day":
 					relavantData = {
-						title: formData.title,
-						description: formData.description,
+						dayTitle: formData.title,
+						dayDescription: formData.description,
 						task: {
 							taskName: formData.taskName,
 							taskDescription: formData.taskDescription,
-							taskDuration: formData.taskDuration,
+							taskDuration: parseInt(formData.taskDuration, 10),
 							productName: formData.productName,
 							productLink: formData.productLink,
 							productImage: formData.productImage,
@@ -138,6 +132,18 @@ const UnifiedModal = ({ isOpen, onClose, mode, data = {}, fetchRoutine }) => {
 		],
 		day: [
 			{
+				id: "title",
+				label: "Day Title",
+				type: "text",
+				placeholder: "Enter Day Title",
+			},
+			{
+				id: "description",
+				label: "Day Description",
+				type: "text",
+				placeholder: "Enter Day Description",
+			},
+			{
 				id: "taskName",
 				label: "Task Name",
 				type: "text",
@@ -152,7 +158,7 @@ const UnifiedModal = ({ isOpen, onClose, mode, data = {}, fetchRoutine }) => {
 			{
 				id: "taskDuration",
 				label: "Task Duration",
-				type: "text",
+				type: "number",
 				placeholder: "Enter task duration",
 			},
 			{
@@ -230,10 +236,10 @@ const UnifiedModal = ({ isOpen, onClose, mode, data = {}, fetchRoutine }) => {
 			<div className="relative z-50 w-full max-w-md rounded-lg bg-white p-6 max-h-[90vh] overflow-y-auto">
 				<div className="mb-4 flex items-center justify-between">
 					<h2 className="text-xl font-semibold">
-						{mode === "addWeek" && "Add New Week"}
-						{mode === "week" && `Edit Week ${data.weekIndex}`}
-						{mode === "day" && `Edit Day ${data.dayIndex}`}
-						{mode === "routine" && "Edit Routine"}
+						{mode === "week" && `Editing Week ${data.weekIndex}`}
+						{mode === "day" &&
+							`Editing Day ${data.dayIndex} of Week ${data.weekIndex}`}
+						{mode === "routine" && "Editing Routine Header"}
 					</h2>
 					<button
 						onClick={onClose}

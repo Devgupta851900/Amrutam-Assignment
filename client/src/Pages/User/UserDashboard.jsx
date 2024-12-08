@@ -3,7 +3,7 @@ import { AppContext } from "../../utils/contextAPI";
 import { NavLink, useNavigate } from "react-router-dom";
 import { joinRoutine } from "../../utils/api";
 import toast from "react-hot-toast";
-import { ChartBarIcon, Loader } from "lucide-react";
+import { Loader, UserRound } from "lucide-react";
 
 const UserDashboard = () => {
 	const { userRoutines, suggestedRoutines } = useContext(AppContext);
@@ -26,7 +26,7 @@ const UserDashboard = () => {
 			setUser(updatedUser);
 
 			// Refetch user routines and suggested routines
-			await initializeApp()
+			await initializeApp();
 
 			// Navigate to the joined routine's page
 			navigate(`/user/routine/joined/${routineId}`);
@@ -62,9 +62,9 @@ const UserDashboard = () => {
 				<div className="bg-gradient-to-r from-blue-700 to-blue-600 text-white rounded-lg shadow-2xl p-6 mb-10">
 					<div className="flex items-center justify-between">
 						<h1 className="text-4xl font-extrabold tracking-tight">
-							Admin Dashboard
+							User Dashboard
 						</h1>
-						<ChartBarIcon className="w-12 h-12 text-white" />
+						<UserRound className="w-12 h-12 text-white" />
 					</div>
 					<p className="mt-2 text-white">
 						Comprehensive overview of routine progress and user
@@ -103,7 +103,9 @@ const UserDashboard = () => {
 													{routine.title}
 												</h2>
 												<p className="text-sm font-semibold px-3   ">
-													{routine.description}
+													{routine.description
+														.split(".")
+														.at(0)}
 												</p>
 											</div>
 											<div className="flex justify-between bg-white self-start mt-1 w-fit px-2 py-1 rounded-2xl text-sm">
@@ -206,7 +208,9 @@ const UserDashboard = () => {
 												{routine.title}
 											</h2>
 											<p className="text-sm font-semibold px-3   ">
-												{routine.description}
+												{routine.description
+													.split(".")
+													.at(0)}
 											</p>
 
 											<div className="space-y-3 px-3">
