@@ -99,8 +99,8 @@ const ViewRoutinePage = () => {
 	}
 
 	return (
-		<div className="max-w-7xl mx-auto min-h-screen pt-16 ">
-			<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		<div className="container mx-auto px-4 py-20 max-w-7xl ">
+			<div className="container mx-auto py-8">
 				{/* Back Button */}
 				<div className="flex justify-between ">
 					<button
@@ -191,7 +191,7 @@ const ViewRoutinePage = () => {
 									<div
 										className={`transition-all duration-300 ease-in-out overflow-hidden ${
 											openWeeks[index]
-												? "max-h-fit"
+												? "max-h-[700vh]"
 												: "max-h-0"
 										}`}
 									>
@@ -239,60 +239,75 @@ const ViewRoutinePage = () => {
 														}`}
 													>
 														<div className="p-4 space-y-4">
-															<p className="text-sm italic sm:text-lg text-gray-600">
-																&quot;
-																{
-																	day.dayDescription
-																}
-																&quot;
-															</p>
-															<h4 className="font-medium text-gray-800 text-sm sm:text-base">
-																Task
-															</h4>
-															<p className="text-sm sm:text-base text-gray-700">
-																{
-																	day.task
-																		.taskName
-																}
-															</p>
-															<p className="text-sm sm:text-base text-gray-700">
-																{
-																	day.task
-																		.taskDescription
-																}
-															</p>
-															<p className="text-sm sm:text-base text-gray-700">
-																Duration:{" "}
-																{
-																	day.task
-																		.taskDuration
-																}{" "}
-																Minutes
-															</p>
-															<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-gray-50 p-3 rounded-lg">
-																<img
-																	src={
-																		day.task
-																			.productImage ||
-																		"https://rukminim2.flixcart.com/image/612/612/xif0q/hair-oil/i/n/c/-original-imagt8ekcf22wvxa.jpeg?q=70"
-																	}
-																	alt="Product"
-																	className="h-20 w-20 object-contain rounded-md shadow-sm bg-white p-2"
-																/>
-																<a
-																	href={
-																		day.task
-																			.productLink
-																	}
-																	target="_blank"
-																	rel="noopener noreferrer"
-																	className="text-sm sm:text-base text-blue-600 hover:text-blue-700 hover:underline font-medium transition-colors duration-200"
-																>
-																	{
-																		day.task
-																			.productName
-																	}
-																</a>
+															<div className="flex flex-col lg:flex-row gap-6">
+																<div className="space-y-4 flex-1">
+																	<p className="text-sm italic sm:text-lg text-gray-600">
+																		&quot;
+																		{
+																			day.dayDescription
+																		}
+																		&quot;
+																	</p>
+																	<div className="space-y-3">
+																		<h4 className="font-medium text-gray-800 text-sm md:text-base">
+																			Task
+																		</h4>
+																		<p className="text-sm md:text-base text-gray-700">
+																			{
+																				day
+																					.task
+																					.taskName
+																			}
+																		</p>
+																		<p className="text-xs md:text-sm text-gray-500">
+																			{
+																				day
+																					.task
+																					.taskDescription
+																			}
+																		</p>
+																		<p className="text-xs md:text-sm text-gray-500">
+																			Duration:{" "}
+																			{
+																				day
+																					.task
+																					.taskDuration
+																			}{" "}
+																			Minutes
+																		</p>
+																	</div>
+																</div>
+																{/* Product image and link section */}
+																<div className="flex flex-col items-center gap-4 bg-gray-50 p-4 rounded-lg w-full  lg:w-[50%]">
+																	<div className="w-full flex justify-center">
+																		<img
+																			src={
+																				day
+																					.task
+																					.productImage ||
+																				"/api/placeholder/160/160"
+																			}
+																			alt="Product"
+																			className="h-40 w-40 object-contain rounded-md shadow-sm bg-white p-2"
+																		/>
+																	</div>
+																	<a
+																		href={
+																			day
+																				.task
+																				.productLink
+																		}
+																		target="_blank"
+																		rel="noopener noreferrer"
+																		className="text-sm md:text-base text-blue-600 hover:text-blue-700 hover:underline font-medium transition-colors duration-200 text-center"
+																	>
+																		{
+																			day
+																				.task
+																				.productName
+																		}
+																	</a>
+																</div>
 															</div>
 														</div>
 													</div>

@@ -401,7 +401,7 @@ const JoinedRoutinePage = () => {
 									<div
 										className={`transition-all duration-300 ease-in-out overflow-hidden ${
 											openWeeks[weekIndex]
-												? "max-h-fit"
+												? "max-h-[700vh]"
 												: "max-h-0"
 										}`}
 									>
@@ -470,44 +470,84 @@ const JoinedRoutinePage = () => {
 																	: "max-h-0"
 															}`}
 														>
-															<div className="p-4 space-y-4">
-																<div className="space-y-3">
-																	<p className="text-sm italic sm:text-lg text-gray-600">
-																		&quot;
-																		{
-																			day.dayDescription
-																		}
-																		&quot;
-																	</p>
-																	<h4 className="font-medium text-gray-800 text-sm sm:text-base">
-																		Task
-																	</h4>
-																	<p className="text-sm sm:text-base text-gray-700">
-																		{
-																			day
-																				.task
-																				.taskName
-																		}
-																	</p>
-																	<p className="text-xs sm:text-sm text-gray-500">
-																		{
-																			day
-																				.task
-																				.taskDescription
-																		}
-																	</p>
-																	<p className="text-xs sm:text-sm text-gray-500">
-																		Duration:{" "}
-																		{
-																			day
-																				.task
-																				.taskDuration
-																		}{" "}
-																		Minutes
-																	</p>
+															<div className="p-4 space-y-6">
+																{/* Main content container */}
+																<div className="flex flex-col lg:flex-row gap-6">
+																	{/* Task information section */}
+																	<div className="space-y-4 flex-1">
+																		<p className="text-sm md:text-lg italic text-gray-600">
+																			"
+																			{
+																				day.dayDescription
+																			}
+																			"
+																		</p>
+
+																		<div className="space-y-3">
+																			<h4 className="font-medium text-gray-800 text-sm md:text-base">
+																				Task
+																			</h4>
+																			<p className="text-sm md:text-base text-gray-700">
+																				{
+																					day
+																						.task
+																						.taskName
+																				}
+																			</p>
+																			<p className="text-xs md:text-sm text-gray-500">
+																				{
+																					day
+																						.task
+																						.taskDescription
+																				}
+																			</p>
+																			<p className="text-xs md:text-sm text-gray-500">
+																				Duration:{" "}
+																				{
+																					day
+																						.task
+																						.taskDuration
+																				}{" "}
+																				Minutes
+																			</p>
+																		</div>
+																	</div>
+
+																	{/* Product image and link section */}
+																	<div className="flex flex-col items-center gap-4 bg-gray-50 p-4 rounded-lg w-full lg:w-[50%]">
+																		<div className="w-full flex justify-center">
+																			<img
+																				src={
+																					day
+																						.task
+																						.productImage ||
+																					"/api/placeholder/160/160"
+																				}
+																				alt="Product"
+																				className="h-40 w-40 object-contain rounded-md shadow-sm bg-white p-2"
+																			/>
+																		</div>
+																		<a
+																			href={
+																				day
+																					.task
+																					.productLink
+																			}
+																			target="_blank"
+																			rel="noopener noreferrer"
+																			className="text-sm md:text-base text-blue-600 hover:text-blue-700 hover:underline font-medium transition-colors duration-200 text-center"
+																		>
+																			{
+																				day
+																					.task
+																					.productName
+																			}
+																		</a>
+																	</div>
 																</div>
 
-																<div className="space-y-4">
+																{/* Actions section */}
+																<div className="space-y-4 pt-2">
 																	<button
 																		onClick={() =>
 																			markAsCompleted(
@@ -518,11 +558,11 @@ const JoinedRoutinePage = () => {
 																		disabled={
 																			isDayCompleted
 																		}
-																		className={` bg-black py-2 px-4 text-sm sm:text-base text-white rounded-md shadow-sm transition-all duration-200 hover:bg-gray-800 hover:shadow ${
+																		className={`w-full sm:w-auto bg-black py-2 px-6 text-sm md:text-base text-white rounded-md shadow-sm transition-all duration-200 hover:bg-gray-800 hover:shadow ${
 																			isDayCompleted
 																				? "opacity-50 cursor-not-allowed"
 																				: ""
-																		} `}
+																		}`}
 																	>
 																		{isDayCompleted
 																			? "Completed"
@@ -530,51 +570,24 @@ const JoinedRoutinePage = () => {
 																	</button>
 
 																	{!isDayCompleted && (
-																		<TaskTimer
-																			duration={
-																				day
-																					.task
-																					.taskDuration *
-																				60
-																			}
-																			onComplete={() =>
-																				handleDayStatusUpdate(
-																					weekIndex,
-																					dayIndex
-																				)
-																			}
-																			dayId={`${weekIndex}-${dayIndex}`}
-																		/>
+																		<div className="w-full sm:w-auto">
+																			<TaskTimer
+																				duration={
+																					day
+																						.task
+																						.taskDuration *
+																					60
+																				}
+																				onComplete={() =>
+																					handleDayStatusUpdate(
+																						weekIndex,
+																						dayIndex
+																					)
+																				}
+																				dayId={`${weekIndex}-${dayIndex}`}
+																			/>
+																		</div>
 																	)}
-																</div>
-
-																<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-gray-50 p-3 rounded-lg">
-																	<img
-																		src={
-																			day
-																				.task
-																				.productImage ||
-																			"https://rukminim2.flixcart.com/image/612/612/xif0q/hair-oil/i/n/c/-original-imagt8ekcf22wvxa.jpeg?q=70"
-																		}
-																		alt="Product"
-																		className="h-20 w-20 object-contain rounded-md shadow-sm bg-white p-2"
-																	/>
-																	<a
-																		href={
-																			day
-																				.task
-																				.productLink
-																		}
-																		target="_blank"
-																		rel="noopener noreferrer"
-																		className="text-sm sm:text-base text-blue-600 hover:text-blue-700 hover:underline font-medium transition-colors duration-200"
-																	>
-																		{
-																			day
-																				.task
-																				.productName
-																		}
-																	</a>
 																</div>
 															</div>
 														</div>

@@ -8,6 +8,7 @@ import {
 	getAdminRoutineProgressSummary,
 	getUserDetails,
 } from "../utils/api";
+import { toast } from "react-hot-toast";
 
 // Create AppContext
 export const AppContext = createContext(null);
@@ -76,6 +77,7 @@ export const AppContextProvider = ({ children }) => {
 
 	// Fetch routines and update userRoutines and suggestedRoutines
 	const fetchAllRoutines = async (currentUser) => {
+		setLoading(true);
 		try {
 			const routinesResponse = await getAllRoutines();
 			allSuggestedRoutines.current =
@@ -90,10 +92,12 @@ export const AppContextProvider = ({ children }) => {
 		} catch (error) {
 			console.error("Error fetching routines:", error);
 		}
+		setLoading(false);
 	};
 
 	// Fetch admin-specific data
 	const fetchAdminData = async () => {
+		setLoading(true);
 		try {
 			const response = await getAdminRoutineProgressSummary();
 			setAdminRoutineProgressSummary(
@@ -102,10 +106,12 @@ export const AppContextProvider = ({ children }) => {
 		} catch (error) {
 			console.error("Error fetching admin data:", error);
 		}
+		setLoading(false);
 	};
 
 	// Process routines to filter suggested routines
 	const processRoutines = (currentUser, userRoutineProgress) => {
+		setLoading(true);
 		if (!currentUser || !currentUser.routines) return;
 
 		const userRoutineIds = new Set(currentUser.routines);
@@ -114,6 +120,7 @@ export const AppContextProvider = ({ children }) => {
 		);
 
 		setSuggestedRoutines(filteredSuggestedRoutines);
+		setLoading(false);
 	};
 
 	// Function to log in a user
@@ -152,6 +159,8 @@ export const AppContextProvider = ({ children }) => {
 		setUserRoutines([]);
 		setSuggestedRoutines([]);
 		setAdminRoutineProgressSummary([]);
+
+		toast.success("User logged out successfully");
 
 		navigate("/auth");
 	};

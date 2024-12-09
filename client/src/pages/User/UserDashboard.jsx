@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "../../utils/contextAPI";
 import { NavLink, useNavigate } from "react-router-dom";
 import { joinRoutine } from "../../utils/api";
@@ -6,18 +6,15 @@ import toast from "react-hot-toast";
 import { Loader, UserRound } from "lucide-react";
 
 const UserDashboard = () => {
-	const { userRoutines, suggestedRoutines } = useContext(AppContext);
+	const { userRoutines, suggestedRoutines, loading, setLoading } = useContext(AppContext);
 
 	const navigate = useNavigate();
-
-	const [loading, setLoading] = useState(false);
 
 	const { setUser, initializeApp } = useContext(AppContext);
 
 	const handleJoin = async (routineId) => {
+		
 		try {
-			setLoading(true);
-
 			// Make the API request to join the routine
 			const result = await joinRoutine(routineId);
 
@@ -41,7 +38,7 @@ const UserDashboard = () => {
 				"An unexpected error occurred. Please try again later."
 			);
 		}
-		setLoading(false);
+		
 	};
 
 	if (loading) {
@@ -86,7 +83,7 @@ const UserDashboard = () => {
 						{userRoutines?.map((routine, index) => (
 							<div
 								key={index}
-								className="group h-[400px] relative rounded-xl overflow-hidden shadow-lg transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
+								className="group min-h-[400px]  relative rounded-xl overflow-hidden shadow-lg transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
 							>
 								<div
 									className="absolute inset-0 bg-cover bg-no-repeat bg-center z-0"
@@ -116,7 +113,7 @@ const UserDashboard = () => {
 											</div>
 										</div>
 
-										<div className="space-y-4">
+										<div className="space-y-4 mt-2">
 											<div className="bg-white rounded-md shadow-md p-3">
 												<p className="text-gray-800 font-medium mb-2 ">
 													Progress:{" "}

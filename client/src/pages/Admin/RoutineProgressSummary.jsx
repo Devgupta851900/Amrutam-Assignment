@@ -59,8 +59,9 @@ const RoutineProgressSummary = () => {
 				</button>
 
 				{/* Header Section */}
-				<div className="flex flex-col items-center mb-12">
-					<div className="relative w-48 h-48 mb-6">
+				<div className="flex flex-col items-center mb-12 px-4">
+					{/* Image Section */}
+					<div className="relative w-[80%] sm:w-[60%] mb-6">
 						<div className="absolute inset-0 bg-indigo-100 rounded-2xl rotate-3 transform transition-transform duration-300 group-hover:rotate-6" />
 						<img
 							src={
@@ -68,27 +69,22 @@ const RoutineProgressSummary = () => {
 								"/api/placeholder/300/300"
 							}
 							alt={routineData.routineTitle}
-							className="relative w-full h-full object-contain rounded-2xl shadow-lg 
-                       transform transition-all duration-300 hover:scale-105"
+							className="relative w-full h-auto object-contain rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105"
 						/>
 					</div>
 
-					<h1
-						className="text-4xl font-bold text-gray-800 text-center mb-4 
-                       bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500"
-					>
+					{/* Title Section */}
+					<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500">
 						{routineData.routineTitle}
 					</h1>
 
-					<p className="text-gray-600 text-center max-w-2xl mb-4 leading-relaxed">
+					{/* Description Section */}
+					<p className="text-gray-600 text-center max-w-2xl mb-4 leading-relaxed text-sm sm:text-base lg:text-lg">
 						{routineData.routineDescription}
 					</p>
 
-					<div
-						className="inline-flex items-center px-6 py-2 bg-indigo-50 text-indigo-600 
-                        rounded-full font-medium transform transition-all duration-300 
-                        hover:shadow-md hover:-translate-y-0.5"
-					>
+					{/* Duration Section */}
+					<div className="inline-flex items-center px-4 py-2 text-sm sm:text-base bg-indigo-50 text-indigo-600 rounded-full font-medium transform transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
 						Duration: {routineData.routineDuration} weeks
 					</div>
 				</div>

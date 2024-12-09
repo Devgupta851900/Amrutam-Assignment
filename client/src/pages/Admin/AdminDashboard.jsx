@@ -10,12 +10,17 @@ import {
 	Loader,
 } from "lucide-react";
 import { deleteRoutine } from "../../utils/api";
+import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
-	const { adminRoutineProgressSummary, fetchAdminData, loading } =
+	const { adminRoutineProgressSummary, fetchAdminData, loading, setLoading } =
 		useContext(AppContext);
 
 	const handleDelete = async (routineId) => {
+		setLoading(true);
+
+		const toastId = toast.loading("Deleting Routine");
+
 		try {
 			const confirmation = window.confirm(
 				"Are you sure you want to delete this routine?"
@@ -26,10 +31,25 @@ const AdminDashboard = () => {
 			await deleteRoutine(routineId);
 
 			await fetchAdminData();
+
+			toast.success("Routine Deleted successfully");
 		} catch (error) {
-			console.error("Error deleting routine:", error);
+			toast.error("Error occured while deleting routine");
 		}
+		toast.dismiss(toastId);
+		setLoading(false);
 	};
+
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<Loader className="animate-spin h-12 w-12 text-blue-500" />
+				<div className="animate-pulse text-2xl text-gray-500">
+					Loading your routine...
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
@@ -66,7 +86,7 @@ const AdminDashboard = () => {
 							>
 								{/* Background Image */}
 								<div
-									className="absolute inset-0 bg-contain bg-no-repeat bg-center z-0"
+									className="absolute inset-0 bg-cover md:bg-contain lg:bg-cover bg-no-repeat bg-center z-0"
 									style={{
 										backgroundImage: `url(${routine?.routineImage})`,
 										filter: "brightness(0.6)",
@@ -113,7 +133,10 @@ const AdminDashboard = () => {
 													{routine.routineTitle}
 												</h2>
 												<p className="text-xs sm:text-sm font-semibold">
-													{routine.routineDescription.split(".").at(0)}.
+													{routine.routineDescription
+														.split(".")
+														.at(0)}
+													.
 												</p>
 											</div>
 
@@ -124,7 +147,7 @@ const AdminDashboard = () => {
 													className="flex-1 min-w-0"
 												>
 													<button className="w-full bg-blue-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1">
-														<ChartBarIcon className="w-4 h-4" />
+														<ChartBarIcon className=" w-4 h-4 aspect-square " />
 														<span className="text-xs sm:text-sm">
 															Stats
 														</span>
