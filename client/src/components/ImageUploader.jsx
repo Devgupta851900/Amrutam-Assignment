@@ -105,6 +105,12 @@ const ImageUploader = ({ label, path, onUploadSuccess, initialImageUrl }) => {
 					<span>Uploaded</span>
 				</p>
 			)}
+			<div className="text-xs text-center text-[#032B44] font-bold">
+				Click upload button to upload to the image
+			</div>
+			<div className="text-xs font-bold text-red-700 text-center">
+				Click delete button to remove or change the image
+			</div>
 		</div>
 	);
 };

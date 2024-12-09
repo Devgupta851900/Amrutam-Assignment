@@ -6,14 +6,13 @@ import toast from "react-hot-toast";
 import { Loader, UserRound } from "lucide-react";
 
 const UserDashboard = () => {
-	const { userRoutines, suggestedRoutines, loading, setLoading } = useContext(AppContext);
+	const { userRoutines, suggestedRoutines, loading } = useContext(AppContext);
 
 	const navigate = useNavigate();
 
 	const { setUser, initializeApp } = useContext(AppContext);
 
 	const handleJoin = async (routineId) => {
-		
 		try {
 			// Make the API request to join the routine
 			const result = await joinRoutine(routineId);
@@ -38,7 +37,6 @@ const UserDashboard = () => {
 				"An unexpected error occurred. Please try again later."
 			);
 		}
-		
 	};
 
 	if (loading) {
@@ -101,8 +99,10 @@ const UserDashboard = () => {
 												</h2>
 												<p className="text-sm font-semibold px-3   ">
 													{routine.description
-														.split(".")
-														.at(0)}
+														.split(" ")
+														.splice(0, 15)
+														.join(" ")}
+													...
 												</p>
 											</div>
 											<div className="flex justify-between bg-white self-start mt-1 w-fit px-2 py-1 rounded-2xl text-sm">

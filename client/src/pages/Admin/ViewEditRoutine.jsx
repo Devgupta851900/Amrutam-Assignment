@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, User, Clock, Loader } from "lucide-react";
 import UnifiedModal from "../../components/UnifiedRoutineModal"; // Reusable Modal for Add/Edit actions
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import {
 	addWeekToRoutine,
 	deleteWeekFromRoutine,
 } from "../../utils/api";
+import { AppContext } from "../../utils/contextAPI";
 
 const ViewEditRoutine = () => {
 	const navigate = useNavigate();
@@ -17,10 +18,11 @@ const ViewEditRoutine = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalMode, setModalMode] = useState("");
 	const [modalData, setModalData] = useState(null);
-	const [loading, setLoading] = useState(false);
 
 	const location = useLocation();
 	const routineId = location.pathname.split("/").at(-1);
+
+	const { fetchAdminData, loading, setLoading } = useContext(AppContext);
 
 	const fetchRoutine = async () => {
 		try {
@@ -107,7 +109,10 @@ const ViewEditRoutine = () => {
 		<div className="container mx-auto pt-24 px-4 py-8 max-w-7xl">
 			{/* Back Button */}
 			<button
-				onClick={() => navigate(-1)}
+				onClick={async () => {
+					await fetchAdminData();
+					navigate(-1);
+				}}
 				className="mb-6 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
 			>
 				Back
@@ -154,6 +159,7 @@ const ViewEditRoutine = () => {
 										handleOpenModal("routine", {
 											title: routine.title,
 											description: routine.description,
+											image: routine.image,
 											routineId: routineId,
 										})
 									}
@@ -204,6 +210,7 @@ const ViewEditRoutine = () => {
 														description:
 															week.weekDescription,
 														routineId: routineId,
+														image: week.weekImage,
 													})
 												}
 												className="px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
@@ -302,6 +309,10 @@ const ViewEditRoutine = () => {
 																			day
 																				.task
 																				.productLink,
+																		productImage:
+																			day
+																				.task
+																				.productImage,
 																	}
 																)
 															}

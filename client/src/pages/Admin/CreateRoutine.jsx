@@ -5,9 +5,10 @@ import { createRoutine } from "../../utils/api";
 import { AppContext } from "../../utils/contextAPI";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
 
 const CreateRoutinePage = () => {
-	const { fetchAdminData } = useContext(AppContext);
+	const { fetchAdminData, loading } = useContext(AppContext);
 
 	const navigate = useNavigate();
 
@@ -152,8 +153,28 @@ const CreateRoutinePage = () => {
 		);
 	};
 
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<Loader className="animate-spin h-12 w-12 text-blue-500" />
+				<div className="animate-pulse text-2xl text-gray-500">
+					Loading your routine...
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="container mx-auto pt-20 px-4 py-8 max-w-7xl">
+			<button
+				onClick={async () => {
+					await fetchAdminData();
+					navigate(-1);
+				}}
+				className="mb-6 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
+			>
+				Back
+			</button>
 			<h1 className="text-4xl font-extrabold text-gray-700 mb-8 text-center md:text-left">
 				Create Your Routine
 			</h1>

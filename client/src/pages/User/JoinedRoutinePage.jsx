@@ -87,8 +87,7 @@ const JoinedRoutinePage = () => {
 	const [openWeeks, setOpenWeeks] = useState({});
 	const [openDays, setOpenDays] = useState({});
 
-	const { setUser } = useContext(AppContext);
-
+	const { setUser, initializeApp } = useContext(AppContext);
 	const location = useLocation();
 	const navigate = useNavigate();
 	const routineId = location.pathname.split("/").at(-1);
@@ -132,6 +131,8 @@ const JoinedRoutinePage = () => {
 	const markAsCompleted = async (weekIndex, dayIndex) => {
 		// Store the previous state before making changes
 		const previousRoutineProgress = { ...routineProgress };
+
+		const toastId = toast.loading("Please Wait");
 
 		try {
 			// Call the API to change completion status
@@ -178,7 +179,6 @@ const JoinedRoutinePage = () => {
 				},
 			}));
 
-			console.log(routineProgress);
 			toast.success("Day marked as completed successfully!");
 		} catch (error) {
 			// Revert to previous state if an error occurs
@@ -187,6 +187,7 @@ const JoinedRoutinePage = () => {
 			toast.error("Failed to mark day as completed");
 			console.error(error);
 		}
+		toast.dismiss(toastId);
 	};
 
 	const handleDayStatusUpdate = async (weekIndex, dayIndex) => {
@@ -240,6 +241,12 @@ const JoinedRoutinePage = () => {
 				};
 			});
 
+			await changeCompletionStatus(
+				routineId,
+				weekIndex + 1,
+				dayIndex + 1
+			);
+
 			toast.success("Day status updated successfully!");
 		} catch (error) {
 			toast.error("Failed to update day status");
@@ -269,7 +276,10 @@ const JoinedRoutinePage = () => {
 	return (
 		<div className="container mx-auto px-4 py-20 max-w-7xl">
 			<button
-				onClick={() => navigate("/user")}
+				onClick={async () => {
+					navigate("/user");
+					await initializeApp();
+				}}
 				className="mb-4 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-300 hover:bg-gray-400 rounded-lg shadow-md"
 			>
 				Home
@@ -297,7 +307,7 @@ const JoinedRoutinePage = () => {
 			{routine && (
 				<div className="bg-white shadow-xl rounded-xl overflow-hidden">
 					{/* Header Section */}
-					<div className="relative bg-gradient-to-r h-[250px] sm:h-[300px] md:h-[400px] from-blue-500 to-purple-600 text-white rounded-lg shadow-lg overflow-hidden">
+					<div className="relative bg-gradient-to-r min-h-[500px] from-blue-500 to-purple-600 text-white rounded-lg shadow-lg overflow-hidden">
 						<div className="absolute inset-0">
 							<img
 								alt="routineImage"
@@ -307,7 +317,7 @@ const JoinedRoutinePage = () => {
 							<div className="absolute inset-0 bg-black bg-opacity-40"></div>
 						</div>
 						{/* Content */}
-						<div className="relative w-[95%] bg-white bg-opacity-40 my-4 mx-auto rounded-lg text-gray-800 p-4 sm:p-6 md:p-8">
+						<div className="relative w-[95%] max-h-[80%] bg-white bg-opacity-40 my-4 mx-auto rounded-lg text-gray-800 p-4 sm:p-6 md:p-8">
 							<div className="text-center md:text-left">
 								<h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 sm:mb-4 text-shadow-lg">
 									{routine.title}
@@ -363,12 +373,16 @@ const JoinedRoutinePage = () => {
 											<div className="border border-gray-200 bg-gray-100 px-3 py-2 sm:px-4 rounded-lg flex-grow sm:flex-grow-0">
 												<h2 className="text-xs sm:text-sm font-bold mb-1 sm:mb-2">
 													Weekly Progress{" "}
-													<span className="text-xs text-gray-600 ml-1 sm:ml-2">
-														(
-														{
-															weekProgress.weekCompletionPercentage
-														}
-														% Complete)
+													<span
+														className={`text-xs text-gray-600 ml-1 sm:ml-2 ${
+															routineProgress
+																.weekProgress[
+																weekIndex
+															]?.completedDays !==
+																7 && "invisible"
+														}`}
+													>
+														Completed
 													</span>
 												</h2>
 												<div className="w-full bg-gray-300 rounded-full h-1">
@@ -386,7 +400,7 @@ const JoinedRoutinePage = () => {
 															weekIndex
 														]?.completedDays
 													}{" "}
-													Days Completed
+													/ 7 Days Completed
 												</p>
 											</div>
 											{openWeeks[weekIndex] ? (

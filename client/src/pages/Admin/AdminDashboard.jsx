@@ -126,53 +126,59 @@ const AdminDashboard = () => {
 											</div>
 										</div>
 
-										{/* Info and Actions Section */}
-										<div className="flex flex-col bg-white text-gray-800 rounded-md shadow-md p-2 sm:p-3">
-											<div>
-												<h2 className="text-lg sm:text-xl font-semibold">
-													{routine.routineTitle}
-												</h2>
-												<p className="text-xs sm:text-sm font-semibold">
-													{routine.routineDescription
-														.split(".")
-														.at(0)}
-													.
-												</p>
+										<div>
+											<div className="bg-white font-semibold text-xs mb-1 text-gray-800 rounded-full shadow-md p-1 w-fit">
+												Duration:{" "}
+												{routine.routineDuration} Weeks
 											</div>
+											{/* Info and Actions Section */}
+											<div className="flex flex-col bg-white text-gray-800 rounded-md shadow-md p-2 sm:p-3">
+												<div>
+													<h2 className="text-lg sm:text-xl font-semibold">
+														{routine.routineTitle}
+													</h2>
+													<p className="text-xs sm:text-sm font-semibold">
+														{routine.routineDescription
+															.split(".")
+															.at(0)}
+														.
+													</p>
+												</div>
 
-											{/* Action Buttons */}
-											<div className="flex flex-wrap mt-2 gap-1 sm:gap-2">
-												<NavLink
-													to={`/admin/routine/summary/${routine.routineId}`}
-													className="flex-1 min-w-0"
-												>
-													<button className="w-full bg-blue-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1">
-														<ChartBarIcon className=" w-4 h-4 aspect-square " />
-														<span className="text-xs sm:text-sm">
-															Stats
-														</span>
+												{/* Action Buttons */}
+												<div className="flex flex-wrap mt-2 gap-1 sm:gap-2">
+													<NavLink
+														to={`/admin/routine/summary/${routine.routineId}`}
+														className="flex-1 min-w-0"
+													>
+														<button className="w-full bg-blue-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1">
+															<ChartBarIcon className=" w-4 h-4 aspect-square " />
+															<span className="text-xs sm:text-sm">
+																Stats
+															</span>
+														</button>
+													</NavLink>
+
+													<button
+														onClick={() =>
+															handleDelete(
+																routine.routineId
+															)
+														}
+														className="flex-1 min-w-0 bg-blue-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-xs sm:text-sm"
+													>
+														Delete
 													</button>
-												</NavLink>
 
-												<button
-													onClick={() =>
-														handleDelete(
-															routine.routineId
-														)
-													}
-													className="flex-1 min-w-0 bg-blue-500 text-white px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300 text-xs sm:text-sm"
-												>
-													Delete
-												</button>
-
-												<NavLink
-													to={`/admin/routine/view-edit/${routine.routineId}`}
-													className="flex-none"
-												>
-													<button className="h-full bg-blue-500 text-white px-2 sm:px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
-														<PencilIcon className="w-4 h-4" />
-													</button>
-												</NavLink>
+													<NavLink
+														to={`/admin/routine/view-edit/${routine.routineId}`}
+														className="flex-none"
+													>
+														<button className="h-full bg-blue-500 text-white px-2 sm:px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
+															<PencilIcon className="w-4 h-4" />
+														</button>
+													</NavLink>
+												</div>
 											</div>
 										</div>
 									</div>
