@@ -141,7 +141,7 @@ const Auth = () => {
 									: "text-gray-600"
 							}`}
 						>
-							Brand
+							Admin
 						</button>
 					</div>
 				</div>

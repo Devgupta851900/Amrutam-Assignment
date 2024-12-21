@@ -124,11 +124,7 @@ const RoutineProgressSummary = () => {
 										Overall Progress
 									</span>
 									<span className="text-sm font-bold text-indigo-600">
-										{parseInt(
-											user.overallProgressPercentage,
-											10
-										)}
-										%
+										{user.overallProgressPercentage}%
 									</span>
 								</div>
 
