@@ -109,7 +109,7 @@ const AdminDashboard = () => {
 													</div>
 												</p>
 												<p className="text-xs sm:text-sm font-semibold text-gray-800 mt-1">
-													Average Progress Percentage:{" "}
+													Average User Progress:{" "}
 													{
 														routine.averageProgressPercentage
 													}
