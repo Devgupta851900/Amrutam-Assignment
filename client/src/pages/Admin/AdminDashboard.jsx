@@ -110,12 +110,10 @@ const AdminDashboard = () => {
 												</p>
 												<p className="text-xs sm:text-sm font-semibold text-gray-800 mt-1">
 													Average User Progress:{" "}
-													{
-														parseInt(
+													{parseInt(
 														routine.averageProgressPercentage,
 														10
-													)
-													}
+													)}
 													%
 												</p>
 												<div className="relative my-1 h-1 bg-gray-300 rounded-full overflow-hidden">

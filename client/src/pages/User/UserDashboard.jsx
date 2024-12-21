@@ -140,10 +140,11 @@ const UserDashboard = () => {
 													/>
 												</div>
 												<p className="text-sm font-semibold text-gray-800 mt-1">
-													{
+													{parseInt(
 														routine.overallProgress
-															.progressPercentage
-													}
+															.progressPercentage,
+														10
+													)}
 													% completed
 												</p>
 											</div>
